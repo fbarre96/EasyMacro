@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,11 +14,11 @@ using MouseKeyboardActivityMonitor.WinApi;
 
 namespace WindowsFormsApplication1
 {
-   
+
 
     public partial class Form1 : Form
     {
-        
+
         private bool continuerAHooker = true;
         InputSimulator inputer = new InputSimulator();
         private MouseHookListener m_mouseListener;
@@ -44,7 +43,7 @@ namespace WindowsFormsApplication1
         private void MouseListener_MouseDownExt(object sender, MouseEventExtArgs e)
         {
             // log the mouse click
-           label1.Text = (string.Format("MouseDown: \t{0}; \t System Timestamp: \t{1}", e.Button, e.Timestamp));
+            lbl_stop_hotkey.Text = (string.Format("MouseDown: \t{0}; \t System Timestamp: \t{1}", e.Button, e.Timestamp));
 
             // uncommenting the following line with suppress a middle mouse button click
             // if (e.Buttons == MouseButtons.Middle) { e.Handled = true; }
@@ -52,12 +51,12 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
-            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -70,5 +69,6 @@ namespace WindowsFormsApplication1
             Unsubscribe();
 
         }
+
     }
 }

@@ -10,7 +10,7 @@
         /// <summary>
         /// Nettoyage des ressources utilisées.
         /// </summary>
-        /// <param name="disposing">true si les ressources managées doivent être supprimées ; sinon, false.</param>
+        /// <param name="disposing">true si les ressources managées doivent être supprimées ; sinon, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -28,37 +28,61 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.btn_record_macro = new System.Windows.Forms.Button();
+            this.lbl_stop_hotkey = new System.Windows.Forms.Label();
+            this.combo_stop_hotkey = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
-            // button1
+            // btn_record_macro
             // 
-            this.button1.Location = new System.Drawing.Point(103, 179);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_record_macro.Location = new System.Drawing.Point(281, 111);
+            this.btn_record_macro.Name = "btn_record_macro";
+            this.btn_record_macro.Size = new System.Drawing.Size(120, 23);
+            this.btn_record_macro.TabIndex = 0;
+            this.btn_record_macro.Text = "Start Record Macro";
+            this.btn_record_macro.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // lbl_stop_hotkey
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(124, 89);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "label1";
+            this.lbl_stop_hotkey.AutoSize = true;
+            this.lbl_stop_hotkey.Location = new System.Drawing.Point(12, 15);
+            this.lbl_stop_hotkey.Name = "lbl_stop_hotkey";
+            this.lbl_stop_hotkey.Size = new System.Drawing.Size(67, 13);
+            this.lbl_stop_hotkey.TabIndex = 1;
+            this.lbl_stop_hotkey.Text = "Stop HotKey";
+            // 
+            // combo_stop_hotkey
+            // 
+            this.combo_stop_hotkey.FormattingEnabled = true;
+            this.combo_stop_hotkey.Items.AddRange(new object[] {
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "F10",
+            "F11",
+            "F12"});
+            this.combo_stop_hotkey.Location = new System.Drawing.Point(96, 12);
+            this.combo_stop_hotkey.Name = "combo_stop_hotkey";
+            this.combo_stop_hotkey.Size = new System.Drawing.Size(121, 21);
+            this.combo_stop_hotkey.TabIndex = 2;
+            this.combo_stop_hotkey.Select(8, 1);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(404, 135);
+            this.Controls.Add(this.combo_stop_hotkey);
+            this.Controls.Add(this.lbl_stop_hotkey);
+            this.Controls.Add(this.btn_record_macro);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Maqueraux";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -67,8 +91,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btn_record_macro;
+        private System.Windows.Forms.Label lbl_stop_hotkey;
+        private System.Windows.Forms.ComboBox combo_stop_hotkey;
     }
 }
-

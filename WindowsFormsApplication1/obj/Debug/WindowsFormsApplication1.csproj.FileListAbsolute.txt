@@ -11,3 +11,17 @@ c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApp
 c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\WindowsInput.xml
 C:\Users\Barre\Documents\Visual Studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\MouseKeyboardActivityMonitor.dll
 C:\Users\Barre\Documents\Visual Studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\MouseKeyboardActivityMonitor.xml
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\bin\Debug\MouseKeyboardActivityMonitor.dll
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\bin\Debug\WindowsInput.dll
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\bin\Debug\MouseKeyboardActivityMonitor.xml
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\bin\Debug\WindowsInput.xml
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.CoreCompileInputs.cache
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\barre\Source\Repos\Maqueraux\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb

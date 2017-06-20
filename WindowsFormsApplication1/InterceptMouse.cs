@@ -30,16 +30,16 @@ namespace WindowsFormsApplication1
         public static void Main()
 
         {
-            points.Add(new Point(0,0));
+            points.Add(new Point(0, 0));
             _hookID = SetHook(_proc);
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             aTimer.Interval = 10;
             aTimer.Enabled = true;
-            
-           
-            Application.Run();
 
+
+            //Application.Run();
+            
             UnhookWindowsHookEx(_hookID);
 
         }
@@ -48,9 +48,10 @@ namespace WindowsFormsApplication1
         {
             posMouse.x = Cursor.Position.X;
             posMouse.y = Cursor.Position.Y;
-                Random r = new Random();
-                //inputer.Mouse.LeftButtonDown();
-                //inputer.Mouse.MoveMouseBy(ak47_recoil[compteurBalle].X, ak47_recoil[compteurBalle].Y + change);
+            System.Threading.Thread.Sleep(50);
+           // Random r = new Random();
+            //inputer.Mouse.LeftButtonDown();
+            //inputer.Mouse.MoveMouseBy(ak47_recoil[compteurBalle].X, ak47_recoil[compteurBalle].Y + change);
 
         }
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -58,16 +59,16 @@ namespace WindowsFormsApplication1
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-       
+
         //EVENT KEY UP
         public static void gkh_KeyUp(object sender, KeyEventArgs e)
         {
-            Console.WriteLine("Up\t" + e.KeyCode.ToString());  
-            if(e.KeyCode.ToString() == "N")
+            Console.WriteLine("Up\t" + e.KeyCode.ToString());
+            if (e.KeyCode.ToString() == "N")
             {
-                //
+                Console.WriteLine("N");
             }
-            if(e.KeyCode.ToString() == "F11")
+            if (e.KeyCode.ToString() == "F11")
             {
                 //mode = -1;
             }
@@ -76,7 +77,7 @@ namespace WindowsFormsApplication1
         //EVENT KEY DOWN
         public static void gkh_KeyDown(object sender, KeyEventArgs e)
         {
-            //Console.WriteLine("Down\t" + e.KeyCode.ToString());
+            Console.WriteLine("Down\t" + e.KeyCode.ToString());
             e.Handled = false;
         }
         private delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
@@ -97,29 +98,64 @@ namespace WindowsFormsApplication1
 
         {
             MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-            
-            if(nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
+
+            if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             {
-                if (mode == 1)
-                {
-                    setRecoil(true);
-                    // return (IntPtr)1;
-                }
+                Console.WriteLine("Left down");
+                //return (IntPtr)1;
+                /* if (mode == 1)
+                 {
+                     setRecoil(true);
+                     // return (IntPtr)1;
+                 }*/
             }
-            else if(nCode >= 0 && MouseMessages.WM_LBUTTONUP == (MouseMessages)wParam)
+            else if (nCode >= 0 && MouseMessages.WM_LBUTTONUP == (MouseMessages)wParam)
             {
-                if(mode == 1)
-                {
-                    setRecoil(false);
-                   // return (IntPtr)1;
-                }
+                Console.WriteLine("Left up");
+                //return (IntPtr)1;
+                /* if (mode == 1)
+                 {
+                     setRecoil(false);
+                     // return (IntPtr)1;
+                 }*/
             }
-            
-                return CallNextHookEx(_hookID, nCode, wParam, lParam);
+            else if (nCode >= 0 && MouseMessages.WM_RBUTTONDOWN == (MouseMessages)wParam)
+            {
+                Console.WriteLine("right down");
+                return (IntPtr)1;
+                /* if (mode == 1)
+                 {
+                     setRecoil(false);
+                     // return (IntPtr)1;
+                 }*/
+            }
+            else if (nCode >= 0 && MouseMessages.WM_RBUTTONUP == (MouseMessages)wParam)
+            {
+                Console.WriteLine("right up");
+                return (IntPtr)1;
+                /* if (mode == 1)
+                 {
+                     setRecoil(false);
+                     // return (IntPtr)1;
+                 }*/
+            }
+            else if (nCode >= 0 && MouseMessages.WM_MOUSEWHEEL == (MouseMessages)wParam)
+            {
+                uint temp = hookStruct.mouseData >> 16;
+                short zDelta = (short)(temp & (0xFFFF));
+                Console.WriteLine("Mouse wheely:"+ zDelta);
+                return (IntPtr)1;
+                /* if (mode == 1)
+                 {
+                     setRecoil(false);
+                     // return (IntPtr)1;
+                 }*/
+            }
+            return CallNextHookEx(_hookID, nCode, wParam, lParam);
 
         }
 
-        
+
 
         [StructLayout(LayoutKind.Sequential)]
 
@@ -153,8 +189,7 @@ namespace WindowsFormsApplication1
         private static IntPtr SetHook(LowLevelMouseProc proc)
 
         {
-            gkh.HookedKeys.Add(Keys.N);
-            //Sgkh.HookedKeys.Add(Keys.Shift);
+            //gkh.HookedKeys.Add(Keys.N); //Faisait parti de l'ancienne appli pour hook que N
             gkh.KeyDown += new KeyEventHandler(gkh_KeyDown);
             gkh.KeyUp += new KeyEventHandler(gkh_KeyUp);
             using (Process curProcess = Process.GetCurrentProcess())
