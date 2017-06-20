@@ -1,0 +1,13 @@
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\WindowsInput.dll
+c:\users\barre\documents\visual studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\WindowsInput.xml
+C:\Users\Barre\Documents\Visual Studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\MouseKeyboardActivityMonitor.dll
+C:\Users\Barre\Documents\Visual Studio 2015\Projects\CSGOBreaker\WindowsFormsApplication1\bin\Debug\MouseKeyboardActivityMonitor.xml
