@@ -41,6 +41,7 @@
             this.btn_record_macro.TabIndex = 0;
             this.btn_record_macro.Text = "Start Record Macro";
             this.btn_record_macro.UseVisualStyleBackColor = true;
+            this.btn_record_macro.Click += new System.EventHandler(this.btn_record_macro_Click);
             // 
             // lbl_stop_hotkey
             // 
@@ -53,6 +54,7 @@
             // 
             // combo_stop_hotkey
             // 
+            this.combo_stop_hotkey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.combo_stop_hotkey.FormattingEnabled = true;
             this.combo_stop_hotkey.Items.AddRange(new object[] {
             "F1",
@@ -71,7 +73,6 @@
             this.combo_stop_hotkey.Name = "combo_stop_hotkey";
             this.combo_stop_hotkey.Size = new System.Drawing.Size(121, 21);
             this.combo_stop_hotkey.TabIndex = 2;
-            this.combo_stop_hotkey.Select(8, 1);
             // 
             // Form1
             // 

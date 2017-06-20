@@ -15,6 +15,7 @@ using Utilities;
 using WindowsInput;
 using System.Timers;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace WindowsFormsApplication1
 {
@@ -26,21 +27,55 @@ namespace WindowsFormsApplication1
         private static POINT posMouse;
         private static IntPtr _hookID = IntPtr.Zero;
         private static globalKeyboardHook gkh = new globalKeyboardHook();
-        private static List<Point> points = new List<Point>();
+        private static string stopHotKey = "";
+        
+        public enum Mode { none , recording}
+        private static Mode mode = Mode.none;
+        private static Stopwatch stopwatch = new Stopwatch();
+        private static List<MacroEvent> recordedEvents;
+
+        
         public static void Main()
 
         {
-            points.Add(new Point(0, 0));
             _hookID = SetHook(_proc);
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Interval = 10;
+            aTimer.Interval = 50;
             aTimer.Enabled = true;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-
+            Application.Run(new Form1());
             //Application.Run();
-            
+
             UnhookWindowsHookEx(_hookID);
+
+        }
+
+        internal static void startRecording(string hotkey)
+        {
+            Console.WriteLine("Start recording : stop key " + hotkey + "( warp !" + (Screen.AllScreens[0].Bounds.Width / 2.0));
+            inputer.Mouse.MoveMouseTo(65535 / 2, 65535 / 2);
+            stopHotKey = hotkey;
+            mode = Mode.recording;
+            stopwatch.Start();
+            //recordedEvents.Clear();
+            recordedEvents = new List<MacroEvent>();
+
+        }
+        internal static void stopRecording()
+        {
+            stopHotKey = "";
+            mode = Mode.none;
+            stopwatch.Stop();
+            Console.WriteLine("Stop recording !");
+            DialogResult result = MessageBox.Show("The recording has been stopped. Do you want to save it?", "EasyMacro", MessageBoxButtons.OKCancel);
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                    // save to file
+                
+            }
 
         }
         // EVENT EVERY 10 ms
@@ -48,7 +83,11 @@ namespace WindowsFormsApplication1
         {
             posMouse.x = Cursor.Position.X;
             posMouse.y = Cursor.Position.Y;
-            System.Threading.Thread.Sleep(50);
+            Console.WriteLine(posMouse.x + ";" + posMouse.y);
+            if(mode == Mode.recording)
+            {
+                recordedEvents.Add(new MacroEvent(stopwatch.ElapsedMilliseconds, MacroEvent.EventType.mouseMoved, posMouse.x, posMouse.y));
+            }
            // Random r = new Random();
             //inputer.Mouse.LeftButtonDown();
             //inputer.Mouse.MoveMouseBy(ak47_recoil[compteurBalle].X, ak47_recoil[compteurBalle].Y + change);
@@ -64,13 +103,13 @@ namespace WindowsFormsApplication1
         public static void gkh_KeyUp(object sender, KeyEventArgs e)
         {
             Console.WriteLine("Up\t" + e.KeyCode.ToString());
-            if (e.KeyCode.ToString() == "N")
+            if (e.KeyCode.ToString() == stopHotKey && mode == Mode.recording)
             {
-                Console.WriteLine("N");
+                stopRecording();
             }
-            if (e.KeyCode.ToString() == "F11")
+            if (mode == Mode.recording)
             {
-                //mode = -1;
+                recordedEvents.Add(new MacroEvent(stopwatch.ElapsedMilliseconds, MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode));
             }
             e.Handled = false;
         }
@@ -78,12 +117,18 @@ namespace WindowsFormsApplication1
         public static void gkh_KeyDown(object sender, KeyEventArgs e)
         {
             Console.WriteLine("Down\t" + e.KeyCode.ToString());
+            if (mode == Mode.recording)
+            {
+                recordedEvents.Add(new MacroEvent(stopwatch.ElapsedMilliseconds, MacroEvent.EventType.keyDown, (int)e.KeyCode, (int)e.KeyCode));
+            }
             e.Handled = false;
         }
         private delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
 
         //MOUSE EVENTS
         private const int WH_MOUSE_LL = 14;
+        
+
         private enum MouseMessages
         {
             WM_LBUTTONDOWN = 0x0201,
@@ -102,6 +147,10 @@ namespace WindowsFormsApplication1
             if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             {
                 Console.WriteLine("Left down");
+                if (mode == Mode.recording)
+                {
+                    recordedEvents.Add(new MacroEvent(stopwatch.ElapsedMilliseconds, MacroEvent.EventType.lDown, posMouse.x, posMouse.y));
+                }
                 //return (IntPtr)1;
                 /* if (mode == 1)
                  {
@@ -112,6 +161,10 @@ namespace WindowsFormsApplication1
             else if (nCode >= 0 && MouseMessages.WM_LBUTTONUP == (MouseMessages)wParam)
             {
                 Console.WriteLine("Left up");
+                if (mode == Mode.recording)
+                {
+                    recordedEvents.Add(new MacroEvent(stopwatch.ElapsedMilliseconds, MacroEvent.EventType.lUp, posMouse.x, posMouse.y));
+                }
                 //return (IntPtr)1;
                 /* if (mode == 1)
                  {
@@ -122,7 +175,11 @@ namespace WindowsFormsApplication1
             else if (nCode >= 0 && MouseMessages.WM_RBUTTONDOWN == (MouseMessages)wParam)
             {
                 Console.WriteLine("right down");
-                return (IntPtr)1;
+                if (mode == Mode.recording)
+                {
+                    recordedEvents.Add(new MacroEvent(stopwatch.ElapsedMilliseconds, MacroEvent.EventType.rDown, posMouse.x, posMouse.y));
+                }
+                //return (IntPtr)1;
                 /* if (mode == 1)
                  {
                      setRecoil(false);
@@ -132,7 +189,11 @@ namespace WindowsFormsApplication1
             else if (nCode >= 0 && MouseMessages.WM_RBUTTONUP == (MouseMessages)wParam)
             {
                 Console.WriteLine("right up");
-                return (IntPtr)1;
+                if (mode == Mode.recording)
+                {
+                    recordedEvents.Add(new MacroEvent(stopwatch.ElapsedMilliseconds, MacroEvent.EventType.rUp, posMouse.x, posMouse.y));
+                }
+                //return (IntPtr)1;
                 /* if (mode == 1)
                  {
                      setRecoil(false);
@@ -144,7 +205,11 @@ namespace WindowsFormsApplication1
                 uint temp = hookStruct.mouseData >> 16;
                 short zDelta = (short)(temp & (0xFFFF));
                 Console.WriteLine("Mouse wheely:"+ zDelta);
-                return (IntPtr)1;
+                if (mode == Mode.recording)
+                {
+                    recordedEvents.Add(new MacroEvent(stopwatch.ElapsedMilliseconds, MacroEvent.EventType.wheel, zDelta, zDelta));
+                }
+                //return (IntPtr)1;
                 /* if (mode == 1)
                  {
                      setRecoil(false);

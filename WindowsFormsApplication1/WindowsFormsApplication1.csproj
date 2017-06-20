@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="globalKeyboardHook.cs" />
     <Compile Include="InterceptMouse.cs" />
+    <Compile Include="MacroEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

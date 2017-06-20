@@ -19,35 +19,6 @@ namespace WindowsFormsApplication1
     public partial class Form1 : Form
     {
 
-        private bool continuerAHooker = true;
-        InputSimulator inputer = new InputSimulator();
-        private MouseHookListener m_mouseListener;
-
-        // Subroutine for activating the hook
-        public void Subscribe()
-        {
-            // Note: for an application hook, use the AppHooker class instead
-            m_mouseListener = new MouseHookListener(new AppHooker());
-
-            // The listener is not enabled by default
-            m_mouseListener.Enabled = true;
-
-            // Set the event handler
-            // recommended to use the Extended handlers, which allow input suppression among other additional information
-            m_mouseListener.MouseDownExt += MouseListener_MouseDownExt;
-        }
-        public void Unsubscribe()
-        {
-            m_mouseListener.Dispose();
-        }
-        private void MouseListener_MouseDownExt(object sender, MouseEventExtArgs e)
-        {
-            // log the mouse click
-            lbl_stop_hotkey.Text = (string.Format("MouseDown: \t{0}; \t System Timestamp: \t{1}", e.Button, e.Timestamp));
-
-            // uncommenting the following line with suppress a middle mouse button click
-            // if (e.Buttons == MouseButtons.Middle) { e.Handled = true; }
-        }
         public Form1()
         {
             InitializeComponent();
@@ -59,16 +30,18 @@ namespace WindowsFormsApplication1
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        private void btn_record_macro_Click(object sender, EventArgs e)
         {
-            Subscribe();
-            while (continuerAHooker)
+            Console.WriteLine("Start recording");
+            if (!this.combo_stop_hotkey.Text.StartsWith("F"))
             {
-                System.Threading.Thread.Sleep(50);
+                MessageBox.Show("Select a hotkey to stop macro recording !", "EasyMacro", MessageBoxButtons.OK);
             }
-            Unsubscribe();
-
+            else {
+                this.WindowState = FormWindowState.Minimized;
+                InterceptMouse.startRecording(this.combo_stop_hotkey.Text);
+            }
         }
-
     }
 }
