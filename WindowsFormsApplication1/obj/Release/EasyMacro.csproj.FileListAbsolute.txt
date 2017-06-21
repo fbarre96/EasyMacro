@@ -1,0 +1,16 @@
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\EasyMacro.exe.config
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\EasyMacro.exe.manifest
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\EasyMacro.application
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\EasyMacro.exe
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\EasyMacro.pdb
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\MouseKeyboardActivityMonitor.dll
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\WindowsInput.dll
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\MouseKeyboardActivityMonitor.xml
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\bin\Release\WindowsInput.xml
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.Form1.resources
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.csproj.GenerateResource.Cache
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.exe.manifest
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.application
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.exe
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.pdb

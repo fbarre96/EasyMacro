@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="EasyMacro.exe" version="1.0.0.4" publicKeyToken="f8ac9f20bcaa6d12" language="neutral" processorArchitecture="msil" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="EasyMacro" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="EasyMacro.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          Options du manifeste de contrôle de compte d'utilisateur
+          Si vous souhaitez modifier le niveau du contrôle de compte d'utilisateur Windows, remplacez le 
+          nœud requestedExecutionLevel par l'une des propositions suivantes :
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         Si vous souhaitez utiliser la virtualisation de fichiers et du Registre pour la 
+         compatibilité descendante, supprimez le nœud requestedExecutionLevel.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="EasyMacro.exe" size="20408">
+      <assemblyIdentity name="EasyMacro" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>9wKhpOSky/xgRyR8zpSfL70BRdwlLx0AQPd1IN+df/Y=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MouseKeyboardActivityMonitor.dll" size="45056">
+      <assemblyIdentity name="MouseKeyboardActivityMonitor" version="4.0.5150.10665" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>ybXp6heswvmq7pFZg2vhNXAJQGSm7fowl8jbf5izpgA=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WindowsInput.dll" size="22528">
+      <assemblyIdentity name="WindowsInput" version="1.0.4.0" publicKeyToken="9B287F7DC5073CAD" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>gRENRCVjl/DzxXKiDKlLtMZp5d6J+TSKutJj+9gcVLk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="avances-makefile-options-parametres-configuration-texte-x-icone-4439.ico" size="137750">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>ewjK47b4S02MEvgSwOR4S3RvXWTTkHKQmSvabrAkyHs=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="EasyMacro.exe.config" size="189">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>6N7MliNbVJSIAIPrecIshMbZ7zEoKLr5SQvud4LDUOw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <fileAssociation extension=".ema" description="EasyMacro recording" progid="EzMacro" defaultIcon="avances-makefile-options-parametres-configuration-texte-x-icone-4439.ico" xmlns="urn:schemas-microsoft-com:clickonce.v1" />
+<publisherIdentity name="CN=Barre-PC\Barre" issuerKeyHash="bc90a61cd2f773ddf370a7637aff0f0173909ba3" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>CB9JZp2ouYk5QjoL86wTL0THzljtKfpzRuGJOzRlaQM=</DigestValue></Reference></SignedInfo><SignatureValue>E8yr/ZmFoOKh3eyOdLgpfqAaRFSIZfGfJe5+uPUbMQlBFVQfJm2I7CXCsoIHUg3MelU1TWPfwS7Clf4fZDLbUb4lquUIHuWJ5hcmtLri+ZGReOQlSvyviJEluvHvKkJ9E9xCkmYBIn8fqLUWPY6QYhEtVBgL/ibahxjmoXn7yXY=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>wvmsgHA25SKdSrH1EA/KeGx7rMxrdWJvQkxsUEEvz9uP7rTFaqjTaqXkexr4+4cqvARw862EJUsjThEQkJbdNz8r/Fscr/xZNderErLdi9dMPDLuU74dD/wedkGrsaQvlnY0T0QehFCDUNKzyW70Om5eSDHpTvPAeM1dntVI5JE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="036965343b89e14673fa29ed58cec7442f13acf30b3a423989b9a89d66491f08" Description="" Url=""><as:assemblyIdentity name="EasyMacro.exe" version="1.0.0.4" publicKeyToken="f8ac9f20bcaa6d12" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=Barre-PC\Barre</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>wT5Fd+PQYeBnJQbACqv2n7a43dm+1US47iG6NpSOoEU=</DigestValue></Reference></SignedInfo><SignatureValue>QRxv/V2WlGJnDMQBqDmS+BYJALdGPkhqfAVMLQWKous+EAgri94R8FqsWHFiKkpU64cUPzLK4drqZGjL+l6O+eC+gQioeJzwq3scPnkpY/40cmr5UTtrJjIGB/icv8Lk6CKbLbacs6BdZVQiNJrv8uLFvIV5eDtIjBgy9Q7vKdA=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>wvmsgHA25SKdSrH1EA/KeGx7rMxrdWJvQkxsUEEvz9uP7rTFaqjTaqXkexr4+4cqvARw862EJUsjThEQkJbdNz8r/Fscr/xZNderErLdi9dMPDLuU74dD/wedkGrsaQvlnY0T0QehFCDUNKzyW70Om5eSDHpTvPAeM1dntVI5JE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB0TCCATqgAwIBAgIQGhboem//7o5HDUIwuCmLOzANBgkqhkiG9w0BAQsFADAnMSUwIwYDVQQDHhwAQgBhAHIAcgBlAC0AUABDAFwAQgBhAHIAcgBlMB4XDTE3MDYyMTEwMDQ0MloXDTE4MDYyMTE2MDQ0MlowJzElMCMGA1UEAx4cAEIAYQByAHIAZQAtAFAAQwBcAEIAYQByAHIAZTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAwvmsgHA25SKdSrH1EA/KeGx7rMxrdWJvQkxsUEEvz9uP7rTFaqjTaqXkexr4+4cqvARw862EJUsjThEQkJbdNz8r/Fscr/xZNderErLdi9dMPDLuU74dD/wedkGrsaQvlnY0T0QehFCDUNKzyW70Om5eSDHpTvPAeM1dntVI5JECAwEAATANBgkqhkiG9w0BAQsFAAOBgQAo5UTzhSiEgrqzyUWpCQXo3lInT9OC2hBiV2HJXH9DpgwlJVmvA3BefDkxJFv7iKqVzW3Bf6FGATMYP6lyMO7FYRSPzh1UrozyOGhM/F81eN3iDlgGDYs0BWeEOHnTg8v8iZ9xCSN4GLUR7p6V9bpjZ6NkryOrmbMdvc1TbIIPnA==</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
