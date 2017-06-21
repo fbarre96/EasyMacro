@@ -36,6 +36,7 @@
             this.btn_save = new System.Windows.Forms.Button();
             this.cb_record_all = new System.Windows.Forms.CheckBox();
             this.cb_keep_time = new System.Windows.Forms.CheckBox();
+            this.btn_quit = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_record_macro
@@ -129,11 +130,22 @@
             this.cb_keep_time.Text = "Keep time";
             this.cb_keep_time.UseVisualStyleBackColor = true;
             // 
+            // btn_quit
+            // 
+            this.btn_quit.Location = new System.Drawing.Point(527, 328);
+            this.btn_quit.Name = "btn_quit";
+            this.btn_quit.Size = new System.Drawing.Size(113, 23);
+            this.btn_quit.TabIndex = 8;
+            this.btn_quit.Text = "Quit";
+            this.btn_quit.UseVisualStyleBackColor = true;
+            this.btn_quit.Click += new System.EventHandler(this.btn_quit_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(652, 326);
+            this.ClientSize = new System.Drawing.Size(645, 363);
+            this.Controls.Add(this.btn_quit);
             this.Controls.Add(this.cb_keep_time);
             this.Controls.Add(this.cb_record_all);
             this.Controls.Add(this.btn_save);
@@ -143,7 +155,7 @@
             this.Controls.Add(this.lbl_stop_hotkey);
             this.Controls.Add(this.btn_record_macro);
             this.Name = "Form1";
-            this.Text = "Maqueraux";
+            this.Text = "EasyMacro";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -160,5 +172,6 @@
         private System.Windows.Forms.Button btn_save;
         private System.Windows.Forms.CheckBox cb_record_all;
         private System.Windows.Forms.CheckBox cb_keep_time;
+        private System.Windows.Forms.Button btn_quit;
     }
 }

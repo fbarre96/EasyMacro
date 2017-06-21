@@ -31,12 +31,13 @@ namespace WindowsFormsApplication1
         public static void Main()
 
         {
-            Console.WriteLine("Commande: " + Environment.GetCommandLineArgs().ToString());
-            if (Environment.GetCommandLineArgs().Length == 2)
+            string[] args = Environment.GetCommandLineArgs();
+            /*Console.WriteLine("Commande: argc:"+args.Length);
+            for(int i = 0; i < args.Length; ++i)
             {
-                Console.WriteLine("Chargement du fichier: " + Environment.GetCommandLineArgs()[1]);
-                //LoadMacroFromFile(Environment.GetCommandLineArgs()[1]);
+                Console.WriteLine(args[i]);
             }
+            */
             _hookID = SetHook(_proc);
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
@@ -45,10 +46,10 @@ namespace WindowsFormsApplication1
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             window = new Form1();
-            if (Environment.GetCommandLineArgs().Length == 2)
+            if (args.Length == 2)
             {
-                Console.WriteLine("Chargement du fichier: " + Environment.GetCommandLineArgs()[1]);
-                //LoadMacroFromFile(Environment.GetCommandLineArgs()[1]);
+                Console.WriteLine("Chargement du fichier: " + args[1]);
+                LoadMacroFromFile(args[1]);
             }
             Application.Run(window);
             //Application.Run();

@@ -19,8 +19,9 @@ namespace WindowsFormsApplication1
     public partial class Form1 : Form
     {
 
-        public Form1()
+        public Form1(string arg = "")
         {
+            
             InitializeComponent();
 
         }
@@ -30,7 +31,10 @@ namespace WindowsFormsApplication1
 
         }
 
-
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            this.Dispose();
+        }
         private void btn_record_macro_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Start recording");
@@ -83,5 +87,12 @@ namespace WindowsFormsApplication1
                 // Do whatever
             }
         }
+
+        private void btn_quit_Click(object sender, EventArgs e)
+        {
+            this.Dispose();
+
+        }
+        
     }
 }
