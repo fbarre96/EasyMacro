@@ -43,7 +43,7 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Select a hotkey to stop macro recording !", "EasyMacro", MessageBoxButtons.OK);
             }
             else {
-                this.WindowState = FormWindowState.Minimized;
+                
                 InterceptMouse.startRecording(this.combo_stop_hotkey.Text, this.cb_record_all.Checked, this.cb_keep_time.Checked);
             }
         }
@@ -91,8 +91,21 @@ namespace WindowsFormsApplication1
         private void btn_quit_Click(object sender, EventArgs e)
         {
             this.Dispose();
-
         }
-        
+
+        private void btn_play_macro_Click(object sender, EventArgs e)
+        {
+            InterceptMouse.playMacro();
+        }
+
+        private void btn_test_Click(object sender, EventArgs e)
+        {
+            InterceptMouse.inputer.Mouse.MoveMouseTo(500, 500);
+        }
+
+        private void grid_macro_event_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            InterceptMouse.updateEvent(e.RowIndex, e.ColumnIndex);
+        }
     }
 }

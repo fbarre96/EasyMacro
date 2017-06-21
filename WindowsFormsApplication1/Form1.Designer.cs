@@ -31,12 +31,18 @@
             this.btn_record_macro = new System.Windows.Forms.Button();
             this.lbl_stop_hotkey = new System.Windows.Forms.Label();
             this.combo_stop_hotkey = new System.Windows.Forms.ComboBox();
-            this.list_macro_event = new System.Windows.Forms.ListBox();
             this.btn_load = new System.Windows.Forms.Button();
             this.btn_save = new System.Windows.Forms.Button();
             this.cb_record_all = new System.Windows.Forms.CheckBox();
             this.cb_keep_time = new System.Windows.Forms.CheckBox();
             this.btn_quit = new System.Windows.Forms.Button();
+            this.btn_play_macro = new System.Windows.Forms.Button();
+            this.btn_test = new System.Windows.Forms.Button();
+            this.grid_macro_event = new System.Windows.Forms.DataGridView();
+            this.Delay = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Event = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.grid_macro_event)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_record_macro
@@ -79,15 +85,6 @@
             this.combo_stop_hotkey.Name = "combo_stop_hotkey";
             this.combo_stop_hotkey.Size = new System.Drawing.Size(121, 21);
             this.combo_stop_hotkey.TabIndex = 2;
-            // 
-            // list_macro_event
-            // 
-            this.list_macro_event.Cursor = System.Windows.Forms.Cursors.Default;
-            this.list_macro_event.FormattingEnabled = true;
-            this.list_macro_event.Location = new System.Drawing.Point(15, 45);
-            this.list_macro_event.Name = "list_macro_event";
-            this.list_macro_event.Size = new System.Drawing.Size(499, 251);
-            this.list_macro_event.TabIndex = 3;
             // 
             // btn_load
             // 
@@ -140,23 +137,77 @@
             this.btn_quit.UseVisualStyleBackColor = true;
             this.btn_quit.Click += new System.EventHandler(this.btn_quit_Click);
             // 
+            // btn_play_macro
+            // 
+            this.btn_play_macro.Location = new System.Drawing.Point(384, 328);
+            this.btn_play_macro.Name = "btn_play_macro";
+            this.btn_play_macro.Size = new System.Drawing.Size(120, 23);
+            this.btn_play_macro.TabIndex = 9;
+            this.btn_play_macro.Text = "Play Macro";
+            this.btn_play_macro.UseVisualStyleBackColor = true;
+            this.btn_play_macro.Click += new System.EventHandler(this.btn_play_macro_Click);
+            // 
+            // btn_test
+            // 
+            this.btn_test.Location = new System.Drawing.Point(558, 75);
+            this.btn_test.Name = "btn_test";
+            this.btn_test.Size = new System.Drawing.Size(75, 23);
+            this.btn_test.TabIndex = 10;
+            this.btn_test.Text = "test";
+            this.btn_test.UseVisualStyleBackColor = true;
+            this.btn_test.Click += new System.EventHandler(this.btn_test_Click);
+            // 
+            // grid_macro_event
+            // 
+            this.grid_macro_event.AllowUserToOrderColumns = true;
+            this.grid_macro_event.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grid_macro_event.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Delay,
+            this.Event,
+            this.Info});
+            this.grid_macro_event.Location = new System.Drawing.Point(15, 41);
+            this.grid_macro_event.Name = "grid_macro_event";
+            this.grid_macro_event.Size = new System.Drawing.Size(344, 255);
+            this.grid_macro_event.TabIndex = 11;
+            this.grid_macro_event.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_macro_event_CellValueChanged);
+            // 
+            // Delay
+            // 
+            this.Delay.HeaderText = "Delay";
+            this.Delay.Name = "Delay";
+            // 
+            // Event
+            // 
+            this.Event.HeaderText = "Event";
+            this.Event.Name = "Event";
+            this.Event.ReadOnly = true;
+            // 
+            // Info
+            // 
+            this.Info.HeaderText = "Info";
+            this.Info.Name = "Info";
+            this.Info.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(645, 363);
+            this.Controls.Add(this.grid_macro_event);
+            this.Controls.Add(this.btn_test);
+            this.Controls.Add(this.btn_play_macro);
             this.Controls.Add(this.btn_quit);
             this.Controls.Add(this.cb_keep_time);
             this.Controls.Add(this.cb_record_all);
             this.Controls.Add(this.btn_save);
             this.Controls.Add(this.btn_load);
-            this.Controls.Add(this.list_macro_event);
             this.Controls.Add(this.combo_stop_hotkey);
             this.Controls.Add(this.lbl_stop_hotkey);
             this.Controls.Add(this.btn_record_macro);
             this.Name = "Form1";
             this.Text = "EasyMacro";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.grid_macro_event)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -167,11 +218,16 @@
         private System.Windows.Forms.Button btn_record_macro;
         private System.Windows.Forms.Label lbl_stop_hotkey;
         private System.Windows.Forms.ComboBox combo_stop_hotkey;
-        public System.Windows.Forms.ListBox list_macro_event;
         private System.Windows.Forms.Button btn_load;
         private System.Windows.Forms.Button btn_save;
         private System.Windows.Forms.CheckBox cb_record_all;
         private System.Windows.Forms.CheckBox cb_keep_time;
         private System.Windows.Forms.Button btn_quit;
+        private System.Windows.Forms.Button btn_play_macro;
+        private System.Windows.Forms.Button btn_test;
+        public System.Windows.Forms.DataGridView grid_macro_event;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Delay;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Event;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Info;
     }
 }

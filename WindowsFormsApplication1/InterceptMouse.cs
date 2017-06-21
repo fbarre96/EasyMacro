@@ -13,7 +13,7 @@ namespace WindowsFormsApplication1
     class InterceptMouse
 
     {
-        private static InputSimulator inputer = new InputSimulator();
+        public static InputSimulator inputer = new InputSimulator();
         private static LowLevelMouseProc _proc = HookCallback;
         private static POINT posMouse;
         private static IntPtr _hookID = IntPtr.Zero;
@@ -50,6 +50,7 @@ namespace WindowsFormsApplication1
             {
                 Console.WriteLine("Chargement du fichier: " + args[1]);
                 LoadMacroFromFile(args[1]);
+                playMacro();
             }
             Application.Run(window);
             //Application.Run();
@@ -60,21 +61,22 @@ namespace WindowsFormsApplication1
 
         internal static void startRecording(string hotkey, bool record_all, bool keep_time)
         {
-            Console.WriteLine("Start recording : stop key " + hotkey + "( warp !" + (Screen.AllScreens[0].Bounds.Width / 2.0));
-            inputer.Mouse.MoveMouseTo(65535 / 2, 65535 / 2);
+            inputer.Mouse.MoveMouseTo(65535 / 2.0, 65535 / 2.0);
+
+            window.WindowState = FormWindowState.Minimized;
             stopHotKey = hotkey;
             if (record_all) {
                 mode = Mode.recordingAll;
-                window.list_macro_event.Enabled = false;
             }
             else { 
                 mode = Mode.recording;
-                window.list_macro_event.Enabled = true;
                 keepTime = keep_time;
             }
+            Console.WriteLine("Start recording : stop key " + hotkey + "( warp !" + (SystemInformation.VirtualScreen.Width / 2.0));
+            //inputer.Mouse.MoveMouseTo(10,10);
             stopwatch.Start();
             //recordedEvents.Clear();
-            window.list_macro_event.Items.Clear();
+            window.grid_macro_event.Rows.Clear();
             recordedEvents = new List<MacroEvent>();
 
         }
@@ -85,9 +87,63 @@ namespace WindowsFormsApplication1
             stopwatch.Stop();
             Console.WriteLine("Stop recording !");
             window.WindowState = FormWindowState.Normal;
-            MessageBox.Show("The recording has been stopped. Don't forget to save it", "EasyMacro", MessageBoxButtons.OK);
 
         }
+
+        internal static void playMacro()
+        {
+            window.WindowState = FormWindowState.Minimized;
+            inputer.Mouse.MoveMouseTo(65535 / 2, 65535 / 2);
+            double width = SystemInformation.VirtualScreen.Width;
+            double height = SystemInformation.VirtualScreen.Height;
+            for (int i = 0; i < recordedEvents.Count; i++)
+            {
+                System.Threading.Thread.Sleep((int)recordedEvents[i].Seconds);
+                if(recordedEvents[i].Type == MacroEvent.EventType.keyDown)
+                {
+                    inputer.Keyboard.KeyDown((WindowsInput.Native.VirtualKeyCode)recordedEvents[i].Param1);
+                }
+                else if(recordedEvents[i].Type == MacroEvent.EventType.keyUp)
+                {
+                    inputer.Keyboard.KeyUp((WindowsInput.Native.VirtualKeyCode)recordedEvents[i].Param1);
+                }
+                else if(recordedEvents[i].Type == MacroEvent.EventType.wheel)
+                {
+                    inputer.Keyboard.Mouse.VerticalScroll(recordedEvents[i].Param1);
+                }
+                else
+                {
+                    double posX = (65535 * recordedEvents[i].Param1) / width;
+                    double posY = (65535 * recordedEvents[i].Param2) / height;
+                    inputer.Mouse.MoveMouseToPositionOnVirtualDesktop(posX, posY);
+                    if (recordedEvents[i].Type == MacroEvent.EventType.lDown)
+                    {
+                        inputer.Mouse.LeftButtonDown();
+                    }
+                    else if(recordedEvents[i].Type == MacroEvent.EventType.lUp)
+                    {
+                        inputer.Mouse.LeftButtonUp();
+                    }
+                    else if (recordedEvents[i].Type == MacroEvent.EventType.rDown)
+                    {
+                        inputer.Mouse.RightButtonDown();
+                    }
+                    else if (recordedEvents[i].Type == MacroEvent.EventType.rUp)
+                    {
+                        inputer.Mouse.RightButtonUp();
+                    }
+                    
+                }
+            }
+            window.WindowState = FormWindowState.Normal;
+        }
+
+        internal static void updateEvent(int rowIndex, int columnIndex)
+        {
+            if(recordedEvents != null)
+                recordedEvents[rowIndex].Seconds = long.Parse((string) window.grid_macro_event.Rows[rowIndex].Cells[columnIndex].Value);
+        }
+
         private static void RecordEvent(MacroEvent.EventType t, int p1, int p2)
         {
             long sec = stopwatch.ElapsedMilliseconds;
@@ -101,7 +157,7 @@ namespace WindowsFormsApplication1
             MacroEvent e = new MacroEvent(sec, t, p1, p2);
             recordedEvents.Add(e);
             Console.WriteLine(e.ToString());
-            window.list_macro_event.Items.Add(e.ToString());
+            window.grid_macro_event.Rows.Add(e.ToStrings());
         }
         public static void LoadMacroFromFile(string path)
         {
@@ -112,19 +168,19 @@ namespace WindowsFormsApplication1
                 br = new BinaryReader(new FileStream(path, FileMode.Open));
                 try
                 {
-                    window.list_macro_event.Items.Clear();
+                    window.grid_macro_event.Rows.Clear();
                     recordedEvents = new List<MacroEvent>();
                     while (true)
                     {
                         MacroEvent cur = new MacroEvent(br.ReadInt64(), (MacroEvent.EventType)br.ReadByte(), br.ReadInt32(), br.ReadInt32());
                         recordedEvents.Add(cur);
-                        window.list_macro_event.Items.Add(cur.ToString());
+                        window.grid_macro_event.Rows.Add(cur.ToStrings());
                     }
                 }
                 catch (IOException e)
                 {
                     br.Close();
-                    //Console.WriteLine(e.Message + "\n Cannot read from file.");
+                    Console.WriteLine(e.Message + "\n Cannot read from file.");
                 }
             }
             catch (IOException e)
@@ -152,6 +208,7 @@ namespace WindowsFormsApplication1
         {
             posMouse.x = Cursor.Position.X;
             posMouse.y = Cursor.Position.Y;
+            //Console.WriteLine(posMouse.x + ", " + posMouse.y);
             if(mode > Mode.recording)
             {
                 RecordEvent(MacroEvent.EventType.mouseMoved, posMouse.x, posMouse.y);
@@ -180,7 +237,7 @@ namespace WindowsFormsApplication1
         public static void gkh_KeyDown(object sender, KeyEventArgs e)
         {
             //Console.WriteLine("Down\t" + e.KeyCode.ToString());
-            if (e.KeyCode.ToString() == stopHotKey && mode == Mode.recording)
+            if (e.KeyCode.ToString() == stopHotKey && mode >= Mode.recording)
             {
                 stopRecording();
             }
@@ -283,7 +340,11 @@ namespace WindowsFormsApplication1
                      // return (IntPtr)1;
                  }*/
             }
-            return CallNextHookEx(_hookID, nCode, wParam, lParam);
+           /* else if (nCode >= 0 && MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
+            {
+                Console.WriteLine("Mouse move:" + posMouse.x + "," + posMouse.y);
+            }*/
+                return CallNextHookEx(_hookID, nCode, wParam, lParam);
 
         }
 
