@@ -19,7 +19,8 @@ namespace WindowsFormsApplication1
         private static IntPtr _hookID = IntPtr.Zero;
         private static globalKeyboardHook gkh = new globalKeyboardHook();
         private static string stopHotKey = "";
-        
+        private static KeyEventHandler newKeyEventHandlerUp;
+        private static KeyEventHandler newKeyEventHandlerDown;
         public enum Mode { none , recording, recordingAll,
             playingUntil
         }
@@ -28,12 +29,14 @@ namespace WindowsFormsApplication1
         private static List<MacroEvent> recordedEvents;
         private static Form1 window;
         private static bool keepTime;
-
+        private static int delayBetweenStrokes;
         [STAThread]
         public static void Main()
 
         {
+            Console.WriteLine("Debut Main");
             string[] args = Environment.GetCommandLineArgs();
+            Microsoft.Win32.Registry.SetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "LowLevelHooksTimeout", 15000);
             /*Console.WriteLine("Commande: argc:"+args.Length);
             for(int i = 0; i < args.Length; ++i)
             {
@@ -56,16 +59,16 @@ namespace WindowsFormsApplication1
             }
             Application.Run(window);
             //Application.Run();
-
-            UnhookWindowsHookEx(_hookID);
+            bool ret = UnhookWindowsHookEx(_hookID);
 
         }
 
-        internal static void startRecording(string hotkey, bool record_all, bool keep_time)
+        internal static void startRecording(string hotkey, bool record_all, bool keep_time, int delay=50)
         {
+            Console.WriteLine("Debut startRecording");
             inputer.Mouse.MoveMouseTo(65535 / 2.0, 65535 / 2.0);
 
-            window.WindowState = FormWindowState.Minimized;
+            window.Hide();
             stopHotKey = hotkey;
             if (record_all) {
                 mode = Mode.recordingAll;
@@ -73,6 +76,7 @@ namespace WindowsFormsApplication1
             else { 
                 mode = Mode.recording;
                 keepTime = keep_time;
+                delayBetweenStrokes = delay; 
             }
             Console.WriteLine("Start recording : stop key " + hotkey + "( warp !" + (SystemInformation.VirtualScreen.Width / 2.0));
             //inputer.Mouse.MoveMouseTo(10,10);
@@ -80,35 +84,39 @@ namespace WindowsFormsApplication1
             //recordedEvents.Clear();
             window.grid_macro_event.Rows.Clear();
             recordedEvents = new List<MacroEvent>();
-
+            Console.WriteLine("Fin startRecording");
         }
         internal static void stopRecording()
         {
+            Console.WriteLine("Debut stopRecording");
             stopHotKey = "";
             mode = Mode.none;
             stopwatch.Stop();
             Console.WriteLine("Stop recording !");
-            window.WindowState = FormWindowState.Normal;
-
+            window.Show();
+            Console.WriteLine("Fin stopRecording");
         }
         internal static void startPlaying(string hotkey)
         {
+            Console.WriteLine("Debut startPlaying");
             stopHotKey = hotkey;
             mode = Mode.playingUntil;
             //Console.WriteLine("Start playing : stop key " + hotkey + "( warp !" + (SystemInformation.VirtualScreen.Width / 2.0));
-            
+            window.Hide();
             while (mode == Mode.playingUntil)
             {
-                window.WindowState = FormWindowState.Minimized;
+                
                 playMacro();
                 Console.WriteLine("mode : " + mode);
-                window.WindowState = FormWindowState.Normal;
+                
             }
+            window.Show();
+            Console.WriteLine("Fin startPlaying");
         }
 
         internal static void playMacro()
         {
-            
+            Console.WriteLine("Debut playMacro");
             inputer.Mouse.MoveMouseTo(65535 / 2, 65535 / 2);
             double width = SystemInformation.VirtualScreen.Width;
             double height = SystemInformation.VirtualScreen.Height;
@@ -151,32 +159,37 @@ namespace WindowsFormsApplication1
                     
                 }
             }
-           
+            Console.WriteLine("Fin playMacro");
         }
 
         internal static void updateEvent(int rowIndex, int columnIndex)
         {
+            Console.WriteLine("Debut updateEvent");
             if(recordedEvents != null)
                 recordedEvents[rowIndex].Seconds = long.Parse((string) window.grid_macro_event.Rows[rowIndex].Cells[columnIndex].Value);
+            Console.WriteLine("Fin updateEvent");
         }
 
         private static void RecordEvent(MacroEvent.EventType t, int p1, int p2)
         {
+            Console.WriteLine("Debut RecordEvent");
             long sec = stopwatch.ElapsedMilliseconds;
             stopwatch.Stop();
             stopwatch.Reset();
             stopwatch.Start();
-            if (!keepTime)
+            if (!keepTime && mode == Mode.recording)
             {
-                sec = 50;
+                sec = delayBetweenStrokes;
             }
             MacroEvent e = new MacroEvent(sec, t, p1, p2);
             recordedEvents.Add(e);
             Console.WriteLine(e.ToString());
             window.grid_macro_event.Rows.Add(e.ToStrings());
+            Console.WriteLine("Fin RecordEvent");
         }
         public static void LoadMacroFromFile(string path)
         {
+            Console.WriteLine("Debut LoadMacroFromFile");
             BinaryReader br;
             List<MacroEvent> ret = new List<MacroEvent>();
             try
@@ -203,9 +216,11 @@ namespace WindowsFormsApplication1
             {
                 Console.WriteLine(e.Message + "\n Cannot open file.");
             }
+            Console.WriteLine("Fin LoadMacroFromFile");
         }
         public static void SaveMacroToFile(string path)
         {
+            Console.WriteLine("Debut SaveMacroToFile");
             // save to file
             BinaryWriter bw = new BinaryWriter(new FileStream(path, FileMode.Create));
             for (int i = 0; i < recordedEvents.Count; ++i)
@@ -217,6 +232,7 @@ namespace WindowsFormsApplication1
                 bw.Write((int)cur.Param2);
             }
             bw.Close();
+            Console.WriteLine("Fin SaveMacroToFile");
         }
 
         // EVENT EVERY 10 ms
@@ -229,10 +245,10 @@ namespace WindowsFormsApplication1
             {
                 RecordEvent(MacroEvent.EventType.mouseMoved, posMouse.x, posMouse.y);
             }
-           // Random r = new Random();
+            // Random r = new Random();
             //inputer.Mouse.LeftButtonDown();
             //inputer.Mouse.MoveMouseBy(ak47_recoil[compteurBalle].X, ak47_recoil[compteurBalle].Y + change);
-
+         //   Console.WriteLine("Fin OnTimedEvent");
         }
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk);
@@ -242,18 +258,25 @@ namespace WindowsFormsApplication1
         //EVENT KEY UP
         public static void gkh_KeyUp(object sender, KeyEventArgs e)
         {
+            //Console.WriteLine("Debut gkh_KeyUp");
             //Console.WriteLine("Up\t" + e.KeyCode.ToString());
             if (mode == Mode.recording || mode == Mode.recordingAll)
             {
                 RecordEvent(MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode);
             }
             e.Handled = false;
+            //Console.WriteLine("Fin gkh_KeyUp");
         }
         //EVENT KEY DOWN
         public static void gkh_KeyDown(object sender, KeyEventArgs e)
         {
+            //eConsole.WriteLine("Debut gkh_KeyDown");
             Console.WriteLine("Down\t" + e.KeyCode.ToString());
-            if (e.KeyCode.ToString() == stopHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
+            if (e.KeyCode.ToString() != stopHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
+            {
+                RecordEvent(MacroEvent.EventType.keyDown, (int)e.KeyCode, (int)e.KeyCode);
+            }
+            else if (e.KeyCode.ToString() == stopHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
             {
                 stopRecording();
             }
@@ -262,11 +285,8 @@ namespace WindowsFormsApplication1
                 Console.WriteLine("Stoppppp!!!");
                 mode = Mode.none;
             }
-            else if (mode == Mode.recording || mode == Mode.recordingAll)
-            {
-                RecordEvent(MacroEvent.EventType.keyDown, (int)e.KeyCode, (int)e.KeyCode);
-            }
             e.Handled = false;
+            //Console.WriteLine("Fin gkh_KeyDown");
         }
         private delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
 
@@ -287,6 +307,7 @@ namespace WindowsFormsApplication1
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 
         {
+            //Console.WriteLine("Debut HookCallback");
             MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
 
             if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
@@ -361,11 +382,12 @@ namespace WindowsFormsApplication1
                      // return (IntPtr)1;
                  }*/
             }
-           /* else if (nCode >= 0 && MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
-            {
-                Console.WriteLine("Mouse move:" + posMouse.x + "," + posMouse.y);
-            }*/
-                return CallNextHookEx(_hookID, nCode, wParam, lParam);
+            /* else if (nCode >= 0 && MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
+             {
+                 Console.WriteLine("Mouse move:" + posMouse.x + "," + posMouse.y);
+             }*/
+            //Console.WriteLine("Fin HookCallback");
+            return CallNextHookEx(_hookID, nCode, wParam, lParam);
 
         }
 
@@ -403,20 +425,24 @@ namespace WindowsFormsApplication1
         private static IntPtr SetHook(LowLevelMouseProc proc)
 
         {
+            Console.WriteLine("Debut SetHook");
+            newKeyEventHandlerDown = new KeyEventHandler(gkh_KeyDown);
+            newKeyEventHandlerUp = new KeyEventHandler(gkh_KeyUp);
             //gkh.HookedKeys.Add(Keys.N); //Faisait parti de l'ancienne appli pour hook que N
-            gkh.KeyDown += new KeyEventHandler(gkh_KeyDown);
-            gkh.KeyUp += new KeyEventHandler(gkh_KeyUp);
+            gkh.KeyDown += newKeyEventHandlerDown;
+            gkh.KeyUp += newKeyEventHandlerUp;
             using (Process curProcess = Process.GetCurrentProcess())
 
             using (ProcessModule curModule = curProcess.MainModule)
 
             {
-
+                Console.WriteLine("Fin SetHook");
                 return SetWindowsHookEx(WH_MOUSE_LL, proc,
 
                     GetModuleHandle(curModule.ModuleName), 0);
 
             }
+            
 
         }
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]

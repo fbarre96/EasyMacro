@@ -28,7 +28,11 @@ namespace WindowsFormsApplication1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            for (int i = 5; i < 201; i+=5)
+            {
+                this.combo_delay_strokes.Items.Add("" + i);
+            }
+            this.combo_delay_strokes.Text = "20";
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -43,8 +47,7 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Select a hotkey to stop macro recording !", "EasyMacro", MessageBoxButtons.OK);
             }
             else {
-                
-                InterceptMouse.startRecording(this.combo_stop_hotkey.Text, this.cb_record_all.Checked, this.cb_keep_time.Checked);
+                InterceptMouse.startRecording(this.combo_stop_hotkey.Text, this.cb_record_all.Checked, this.cb_keep_time.Checked, int.Parse(this.combo_delay_strokes.Text));
             }
         }
 
@@ -53,9 +56,13 @@ namespace WindowsFormsApplication1
             if (this.cb_record_all.Checked)
             {
                 this.cb_keep_time.Visible = false;
+                this.lbl_delay_strokes.Visible = false;
+                this.combo_delay_strokes.Visible = false;
             }else
             {
                 this.cb_keep_time.Visible = true;
+                this.lbl_delay_strokes.Visible = true;
+                this.combo_delay_strokes.Visible = true;
             }
         }
 
@@ -88,25 +95,17 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private void btn_quit_Click(object sender, EventArgs e)
-        {
-            this.Dispose();
-        }
-
         private void btn_play_macro_Click(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Minimized;
+            this.Hide();
             InterceptMouse.playMacro();
-            this.WindowState = FormWindowState.Normal;
+            this.Show();
         }
 
-        private void btn_test_Click(object sender, EventArgs e)
-        {
-            InterceptMouse.inputer.Mouse.MoveMouseTo(500, 500);
-        }
 
         private void grid_macro_event_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            Console.WriteLine("CELL UPDATED");
             InterceptMouse.updateEvent(e.RowIndex, e.ColumnIndex);
         }
 
@@ -121,5 +120,26 @@ namespace WindowsFormsApplication1
                 InterceptMouse.startPlaying(this.combo_stop_hotkey.Text);
             }
         }
+
+        private void cb_keep_time_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.cb_keep_time.Checked)
+            {
+                this.lbl_delay_strokes.Visible = false;
+                this.combo_delay_strokes.Visible = false;
+            }
+            else
+            {
+                this.lbl_delay_strokes.Visible = true;
+                this.combo_delay_strokes.Visible = true;
+            }
+        }
+
+        private void btn_quit_Click_1(object sender, EventArgs e)
+        {
+            this.Dispose();
+            
+        }
+
     }
 }
