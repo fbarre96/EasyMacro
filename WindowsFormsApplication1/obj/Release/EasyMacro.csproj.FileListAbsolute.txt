@@ -15,3 +15,4 @@ C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyM
 C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.exe
 C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.pdb
 C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.TrustInfo.xml
+C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.csprojResolveAssemblyReference.cache

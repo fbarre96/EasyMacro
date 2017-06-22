@@ -20,7 +20,9 @@ namespace WindowsFormsApplication1
         private static globalKeyboardHook gkh = new globalKeyboardHook();
         private static string stopHotKey = "";
         
-        public enum Mode { none , recording, recordingAll}
+        public enum Mode { none , recording, recordingAll,
+            playingUntil
+        }
         private static Mode mode = Mode.none;
         private static Stopwatch stopwatch = new Stopwatch();
         private static List<MacroEvent> recordedEvents;
@@ -50,7 +52,7 @@ namespace WindowsFormsApplication1
             {
                 Console.WriteLine("Chargement du fichier: " + args[1]);
                 LoadMacroFromFile(args[1]);
-                playMacro();
+
             }
             Application.Run(window);
             //Application.Run();
@@ -89,10 +91,24 @@ namespace WindowsFormsApplication1
             window.WindowState = FormWindowState.Normal;
 
         }
+        internal static void startPlaying(string hotkey)
+        {
+            stopHotKey = hotkey;
+            mode = Mode.playingUntil;
+            //Console.WriteLine("Start playing : stop key " + hotkey + "( warp !" + (SystemInformation.VirtualScreen.Width / 2.0));
+            
+            while (mode == Mode.playingUntil)
+            {
+                window.WindowState = FormWindowState.Minimized;
+                playMacro();
+                Console.WriteLine("mode : " + mode);
+                window.WindowState = FormWindowState.Normal;
+            }
+        }
 
         internal static void playMacro()
         {
-            window.WindowState = FormWindowState.Minimized;
+            
             inputer.Mouse.MoveMouseTo(65535 / 2, 65535 / 2);
             double width = SystemInformation.VirtualScreen.Width;
             double height = SystemInformation.VirtualScreen.Height;
@@ -135,7 +151,7 @@ namespace WindowsFormsApplication1
                     
                 }
             }
-            window.WindowState = FormWindowState.Normal;
+           
         }
 
         internal static void updateEvent(int rowIndex, int columnIndex)
@@ -209,7 +225,7 @@ namespace WindowsFormsApplication1
             posMouse.x = Cursor.Position.X;
             posMouse.y = Cursor.Position.Y;
             //Console.WriteLine(posMouse.x + ", " + posMouse.y);
-            if(mode > Mode.recording)
+            if(mode == Mode.recordingAll)
             {
                 RecordEvent(MacroEvent.EventType.mouseMoved, posMouse.x, posMouse.y);
             }
@@ -227,7 +243,7 @@ namespace WindowsFormsApplication1
         public static void gkh_KeyUp(object sender, KeyEventArgs e)
         {
             //Console.WriteLine("Up\t" + e.KeyCode.ToString());
-            if (mode >= Mode.recording)
+            if (mode == Mode.recording || mode == Mode.recordingAll)
             {
                 RecordEvent(MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode);
             }
@@ -236,12 +252,17 @@ namespace WindowsFormsApplication1
         //EVENT KEY DOWN
         public static void gkh_KeyDown(object sender, KeyEventArgs e)
         {
-            //Console.WriteLine("Down\t" + e.KeyCode.ToString());
-            if (e.KeyCode.ToString() == stopHotKey && mode >= Mode.recording)
+            Console.WriteLine("Down\t" + e.KeyCode.ToString());
+            if (e.KeyCode.ToString() == stopHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
             {
                 stopRecording();
             }
-            else if (mode >= Mode.recording)
+            else if(e.KeyCode.ToString() == stopHotKey && mode == Mode.playingUntil)
+            {
+                Console.WriteLine("Stoppppp!!!");
+                mode = Mode.none;
+            }
+            else if (mode == Mode.recording || mode == Mode.recordingAll)
             {
                 RecordEvent(MacroEvent.EventType.keyDown, (int)e.KeyCode, (int)e.KeyCode);
             }
@@ -271,7 +292,7 @@ namespace WindowsFormsApplication1
             if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             {
                // Console.WriteLine("Left down");
-                if (mode >= Mode.recording)
+                if (mode == Mode.recording || mode == Mode.recordingAll)
                 {
                     RecordEvent(MacroEvent.EventType.lDown, posMouse.x, posMouse.y);
                 }
@@ -285,7 +306,7 @@ namespace WindowsFormsApplication1
             else if (nCode >= 0 && MouseMessages.WM_LBUTTONUP == (MouseMessages)wParam)
             {
                // Console.WriteLine("Left up");
-                if (mode >= Mode.recording)
+                if (mode == Mode.recording || mode == Mode.recordingAll)
                 {
                     RecordEvent(MacroEvent.EventType.lUp, posMouse.x, posMouse.y);
                 }
@@ -299,7 +320,7 @@ namespace WindowsFormsApplication1
             else if (nCode >= 0 && MouseMessages.WM_RBUTTONDOWN == (MouseMessages)wParam)
             {
                 //Console.WriteLine("right down");
-                if (mode >= Mode.recording)
+                if (mode == Mode.recording || mode == Mode.recordingAll)
                 {
                     RecordEvent(MacroEvent.EventType.rDown, posMouse.x, posMouse.y);
                 }
@@ -313,7 +334,7 @@ namespace WindowsFormsApplication1
             else if (nCode >= 0 && MouseMessages.WM_RBUTTONUP == (MouseMessages)wParam)
             {
                 //Console.WriteLine("right up");
-                if (mode >= Mode.recording)
+                if (mode == Mode.recording || mode == Mode.recordingAll)
                 {
                     RecordEvent(MacroEvent.EventType.rUp, posMouse.x, posMouse.y);
                 }
@@ -329,7 +350,7 @@ namespace WindowsFormsApplication1
                 uint temp = hookStruct.mouseData >> 16;
                 short zDelta = (short)(temp & (0xFFFF));
                 //Console.WriteLine("Mouse wheely:"+ zDelta);
-                if (mode >= Mode.recording)
+                if (mode == Mode.recording || mode == Mode.recordingAll)
                 {
                     RecordEvent(MacroEvent.EventType.wheel, zDelta, zDelta);
                 }

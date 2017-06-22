@@ -37,17 +37,17 @@
             this.cb_keep_time = new System.Windows.Forms.CheckBox();
             this.btn_quit = new System.Windows.Forms.Button();
             this.btn_play_macro = new System.Windows.Forms.Button();
-            this.btn_test = new System.Windows.Forms.Button();
             this.grid_macro_event = new System.Windows.Forms.DataGridView();
             this.Delay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Event = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btn_play_macro_until_stop = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grid_macro_event)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_record_macro
             // 
-            this.btn_record_macro.Location = new System.Drawing.Point(520, 215);
+            this.btn_record_macro.Location = new System.Drawing.Point(475, 130);
             this.btn_record_macro.Name = "btn_record_macro";
             this.btn_record_macro.Size = new System.Drawing.Size(120, 23);
             this.btn_record_macro.TabIndex = 0;
@@ -88,7 +88,7 @@
             // 
             // btn_load
             // 
-            this.btn_load.Location = new System.Drawing.Point(520, 244);
+            this.btn_load.Location = new System.Drawing.Point(475, 202);
             this.btn_load.Name = "btn_load";
             this.btn_load.Size = new System.Drawing.Size(120, 23);
             this.btn_load.TabIndex = 4;
@@ -98,7 +98,7 @@
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(520, 273);
+            this.btn_save.Location = new System.Drawing.Point(473, 231);
             this.btn_save.Name = "btn_save";
             this.btn_save.Size = new System.Drawing.Size(120, 23);
             this.btn_save.TabIndex = 5;
@@ -109,7 +109,7 @@
             // cb_record_all
             // 
             this.cb_record_all.AutoSize = true;
-            this.cb_record_all.Location = new System.Drawing.Point(248, 14);
+            this.cb_record_all.Location = new System.Drawing.Point(475, 84);
             this.cb_record_all.Name = "cb_record_all";
             this.cb_record_all.Size = new System.Drawing.Size(165, 17);
             this.cb_record_all.TabIndex = 6;
@@ -120,7 +120,7 @@
             // cb_keep_time
             // 
             this.cb_keep_time.AutoSize = true;
-            this.cb_keep_time.Location = new System.Drawing.Point(419, 16);
+            this.cb_keep_time.Location = new System.Drawing.Point(475, 107);
             this.cb_keep_time.Name = "cb_keep_time";
             this.cb_keep_time.Size = new System.Drawing.Size(73, 17);
             this.cb_keep_time.TabIndex = 7;
@@ -129,7 +129,7 @@
             // 
             // btn_quit
             // 
-            this.btn_quit.Location = new System.Drawing.Point(527, 328);
+            this.btn_quit.Location = new System.Drawing.Point(480, 328);
             this.btn_quit.Name = "btn_quit";
             this.btn_quit.Size = new System.Drawing.Size(113, 23);
             this.btn_quit.TabIndex = 8;
@@ -139,23 +139,13 @@
             // 
             // btn_play_macro
             // 
-            this.btn_play_macro.Location = new System.Drawing.Point(384, 328);
+            this.btn_play_macro.Location = new System.Drawing.Point(354, 328);
             this.btn_play_macro.Name = "btn_play_macro";
             this.btn_play_macro.Size = new System.Drawing.Size(120, 23);
             this.btn_play_macro.TabIndex = 9;
             this.btn_play_macro.Text = "Play Macro";
             this.btn_play_macro.UseVisualStyleBackColor = true;
             this.btn_play_macro.Click += new System.EventHandler(this.btn_play_macro_Click);
-            // 
-            // btn_test
-            // 
-            this.btn_test.Location = new System.Drawing.Point(558, 75);
-            this.btn_test.Name = "btn_test";
-            this.btn_test.Size = new System.Drawing.Size(75, 23);
-            this.btn_test.TabIndex = 10;
-            this.btn_test.Text = "test";
-            this.btn_test.UseVisualStyleBackColor = true;
-            this.btn_test.Click += new System.EventHandler(this.btn_test_Click);
             // 
             // grid_macro_event
             // 
@@ -188,13 +178,23 @@
             this.Info.Name = "Info";
             this.Info.ReadOnly = true;
             // 
+            // btn_play_macro_until_stop
+            // 
+            this.btn_play_macro_until_stop.Location = new System.Drawing.Point(228, 328);
+            this.btn_play_macro_until_stop.Name = "btn_play_macro_until_stop";
+            this.btn_play_macro_until_stop.Size = new System.Drawing.Size(120, 23);
+            this.btn_play_macro_until_stop.TabIndex = 12;
+            this.btn_play_macro_until_stop.Text = "Play Macro Until Stop";
+            this.btn_play_macro_until_stop.UseVisualStyleBackColor = true;
+            this.btn_play_macro_until_stop.Click += new System.EventHandler(this.btn_play_macro_until_stop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(645, 363);
+            this.Controls.Add(this.btn_play_macro_until_stop);
             this.Controls.Add(this.grid_macro_event);
-            this.Controls.Add(this.btn_test);
             this.Controls.Add(this.btn_play_macro);
             this.Controls.Add(this.btn_quit);
             this.Controls.Add(this.cb_keep_time);
@@ -224,10 +224,10 @@
         private System.Windows.Forms.CheckBox cb_keep_time;
         private System.Windows.Forms.Button btn_quit;
         private System.Windows.Forms.Button btn_play_macro;
-        private System.Windows.Forms.Button btn_test;
         public System.Windows.Forms.DataGridView grid_macro_event;
         private System.Windows.Forms.DataGridViewTextBoxColumn Delay;
         private System.Windows.Forms.DataGridViewTextBoxColumn Event;
         private System.Windows.Forms.DataGridViewTextBoxColumn Info;
+        private System.Windows.Forms.Button btn_play_macro_until_stop;
     }
 }

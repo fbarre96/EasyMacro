@@ -95,7 +95,9 @@ namespace WindowsFormsApplication1
 
         private void btn_play_macro_Click(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Minimized;
             InterceptMouse.playMacro();
+            this.WindowState = FormWindowState.Normal;
         }
 
         private void btn_test_Click(object sender, EventArgs e)
@@ -106,6 +108,18 @@ namespace WindowsFormsApplication1
         private void grid_macro_event_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             InterceptMouse.updateEvent(e.RowIndex, e.ColumnIndex);
+        }
+
+        private void btn_play_macro_until_stop_Click(object sender, EventArgs e)
+        {
+            if (!this.combo_stop_hotkey.Text.StartsWith("F"))
+            {
+                MessageBox.Show("Select a hotkey to stop macro playing !", "EasyMacro", MessageBoxButtons.OK);
+            }
+            else
+            {
+                InterceptMouse.startPlaying(this.combo_stop_hotkey.Text);
+            }
         }
     }
 }
