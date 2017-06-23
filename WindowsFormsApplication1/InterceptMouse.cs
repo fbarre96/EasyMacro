@@ -207,6 +207,9 @@ namespace WindowsFormsApplication1
                 }
                 mode = Mode.listening;
                 window.btn_start_listening.Text = "Stop";
+                modKeys["Ctrl"] = false;
+                modKeys["Shift"] = false;
+                modKeys["Alt"] = false;
             }
             else
             {
@@ -357,8 +360,15 @@ namespace WindowsFormsApplication1
                                     BackgroundWorker b = o as BackgroundWorker;
                                     string target = (string)args.Argument;
                                     Console.WriteLine("target : " + target);
-                                    LoadMacroFromFileNoGUI(target);
-                                    playMacro(true);
+                                    if(target == "Stop")
+                                    {
+                                        listeningForHotkeys();
+                                    }
+                                    else
+                                    {
+                                        LoadMacroFromFileNoGUI(target);
+                                        playMacro(true);
+                                    }
                                 }
                             );
                             bw.RunWorkerAsync(hotKeys[i].target);

@@ -295,7 +295,7 @@
             this.Macro});
             this.grid_hotkey.Location = new System.Drawing.Point(3, 0);
             this.grid_hotkey.Name = "grid_hotkey";
-            this.grid_hotkey.Size = new System.Drawing.Size(430, 308);
+            this.grid_hotkey.Size = new System.Drawing.Size(430, 314);
             this.grid_hotkey.TabIndex = 0;
             // 
             // Hotkey

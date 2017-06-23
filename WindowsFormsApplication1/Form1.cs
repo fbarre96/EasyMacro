@@ -140,13 +140,20 @@ namespace WindowsFormsApplication1
             DialogResult val = dialog.ShowDialog();
             if (val == DialogResult.OK)
             {
-                string path;
-                OpenFileDialog file = new OpenFileDialog();
-                file.Filter = "easy macro files (*.ema)|*.ema|All files (*.*)|*.*";
-                if (file.ShowDialog() == DialogResult.OK)
+                if (dialog.returnValue5.StartsWith("Target"))
                 {
-                    path = file.FileName;
-                    InterceptMouse.addHotkey(dialog.returnValue1, dialog.returnValue2, dialog.returnValue3, dialog.returnValue4, path);
+                    string path;
+                    OpenFileDialog file = new OpenFileDialog();
+                    file.Filter = "easy macro files (*.ema)|*.ema|All files (*.*)|*.*";
+                    if (file.ShowDialog() == DialogResult.OK)
+                    {
+                        path = file.FileName;
+                        InterceptMouse.addHotkey(dialog.returnValue1, dialog.returnValue2, dialog.returnValue3, dialog.returnValue4, path);
+                    }
+                }
+                else
+                {
+                    InterceptMouse.addHotkey(dialog.returnValue1, dialog.returnValue2, dialog.returnValue3, dialog.returnValue4, "Stop");
                 }
             }
             

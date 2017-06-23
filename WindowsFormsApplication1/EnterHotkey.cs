@@ -16,6 +16,7 @@ namespace WindowsFormsApplication1
         public bool returnValue2;
         public bool returnValue3;
         public bool returnValue4;
+        public string returnValue5;
         public EnterHotkey()
         {
             InitializeComponent();
@@ -28,6 +29,7 @@ namespace WindowsFormsApplication1
             returnValue2 = cb_ctrl.Checked;
             returnValue3 = cb_shift.Checked;
             returnValue4 = cb_alt.Checked;
+            returnValue5 = combo_action.Text;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

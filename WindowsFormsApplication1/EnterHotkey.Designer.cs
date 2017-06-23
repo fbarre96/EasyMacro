@@ -35,7 +35,10 @@
             this.btn_cancel = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.combo_htotkey = new System.Windows.Forms.ComboBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.combo_action = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // cb_ctrl
@@ -70,7 +73,7 @@
             // 
             // btn_ok
             // 
-            this.btn_ok.Location = new System.Drawing.Point(110, 114);
+            this.btn_ok.Location = new System.Drawing.Point(113, 152);
             this.btn_ok.Name = "btn_ok";
             this.btn_ok.Size = new System.Drawing.Size(85, 23);
             this.btn_ok.TabIndex = 5;
@@ -80,7 +83,7 @@
             // 
             // btn_cancel
             // 
-            this.btn_cancel.Location = new System.Drawing.Point(12, 114);
+            this.btn_cancel.Location = new System.Drawing.Point(12, 152);
             this.btn_cancel.Name = "btn_cancel";
             this.btn_cancel.Size = new System.Drawing.Size(92, 23);
             this.btn_cancel.TabIndex = 6;
@@ -90,12 +93,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.combo_htotkey);
             this.groupBox1.Controls.Add(this.cb_alt);
             this.groupBox1.Controls.Add(this.cb_ctrl);
             this.groupBox1.Controls.Add(this.cb_shift);
-            this.groupBox1.Location = new System.Drawing.Point(12, 69);
+            this.groupBox1.Location = new System.Drawing.Point(26, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(183, 39);
+            this.groupBox1.Size = new System.Drawing.Size(172, 66);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Hotkey Modifiers";
@@ -116,18 +120,41 @@
             "F10",
             "F11",
             "F12"});
-            this.combo_htotkey.Location = new System.Drawing.Point(43, 26);
+            this.combo_htotkey.Location = new System.Drawing.Point(70, 39);
             this.combo_htotkey.Name = "combo_htotkey";
-            this.combo_htotkey.Size = new System.Drawing.Size(121, 21);
+            this.combo_htotkey.Size = new System.Drawing.Size(52, 21);
             this.combo_htotkey.TabIndex = 9;
             this.combo_htotkey.Text = "F9";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.combo_action);
+            this.groupBox2.Location = new System.Drawing.Point(26, 84);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(172, 55);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Action";
+            // 
+            // combo_action
+            // 
+            this.combo_action.ForeColor = System.Drawing.Color.Black;
+            this.combo_action.FormattingEnabled = true;
+            this.combo_action.Items.AddRange(new object[] {
+            "Target macro file",
+            "Stop hotkey listening"});
+            this.combo_action.Location = new System.Drawing.Point(6, 19);
+            this.combo_action.Name = "combo_action";
+            this.combo_action.Size = new System.Drawing.Size(160, 21);
+            this.combo_action.TabIndex = 9;
+            this.combo_action.Text = "Target macro file";
             // 
             // EnterHotkey
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(198, 143);
-            this.Controls.Add(this.combo_htotkey);
+            this.ClientSize = new System.Drawing.Size(225, 187);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btn_cancel);
             this.Controls.Add(this.btn_ok);
@@ -135,6 +162,7 @@
             this.Text = "Hotkey";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -147,5 +175,7 @@
         private System.Windows.Forms.Button btn_cancel;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox combo_htotkey;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox combo_action;
     }
 }
