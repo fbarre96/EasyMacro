@@ -41,29 +41,39 @@
             this.cb_keep_time = new System.Windows.Forms.CheckBox();
             this.btn_play_macro_until_stop = new System.Windows.Forms.Button();
             this.grid_macro_event = new System.Windows.Forms.DataGridView();
-            this.Delay = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Event = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btn_play_macro = new System.Windows.Forms.Button();
             this.combo_stop_hotkey = new System.Windows.Forms.ComboBox();
             this.lbl_stop_hotkey = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btn_start_listening = new System.Windows.Forms.Button();
+            this.btn_add_hotkey = new System.Windows.Forms.Button();
+            this.grid_hotkey = new System.Windows.Forms.DataGridView();
+            this.Hotkey = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Macro = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btn_quit = new System.Windows.Forms.Button();
+            this.Delay = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Event = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IdEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Info = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IdParam1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IdParam2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_macro_event)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grid_hotkey)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(3, 1);
+            this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(549, 356);
+            this.tabControl1.Size = new System.Drawing.Size(528, 346);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -78,7 +88,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(541, 330);
+            this.tabPage1.Size = new System.Drawing.Size(520, 320);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Macros";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -194,29 +204,14 @@
             this.grid_macro_event.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Delay,
             this.Event,
-            this.Info});
-            this.grid_macro_event.Location = new System.Drawing.Point(8, 35);
+            this.IdEvent,
+            this.Info,
+            this.IdParam1,
+            this.IdParam2});
+            this.grid_macro_event.Location = new System.Drawing.Point(6, 35);
             this.grid_macro_event.Name = "grid_macro_event";
             this.grid_macro_event.Size = new System.Drawing.Size(344, 255);
             this.grid_macro_event.TabIndex = 22;
-            this.grid_macro_event.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_macro_event_CellValueChanged);
-            // 
-            // Delay
-            // 
-            this.Delay.HeaderText = "Delay";
-            this.Delay.Name = "Delay";
-            // 
-            // Event
-            // 
-            this.Event.HeaderText = "Event";
-            this.Event.Name = "Event";
-            this.Event.ReadOnly = true;
-            // 
-            // Info
-            // 
-            this.Info.HeaderText = "Info";
-            this.Info.Name = "Info";
-            this.Info.ReadOnly = true;
             // 
             // btn_play_macro
             // 
@@ -261,17 +256,63 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.btn_start_listening);
+            this.tabPage2.Controls.Add(this.btn_add_hotkey);
+            this.tabPage2.Controls.Add(this.grid_hotkey);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(541, 330);
+            this.tabPage2.Size = new System.Drawing.Size(520, 320);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Setup Hotkeys";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // btn_start_listening
+            // 
+            this.btn_start_listening.Location = new System.Drawing.Point(439, 285);
+            this.btn_start_listening.Name = "btn_start_listening";
+            this.btn_start_listening.Size = new System.Drawing.Size(75, 23);
+            this.btn_start_listening.TabIndex = 2;
+            this.btn_start_listening.Text = "Start";
+            this.btn_start_listening.UseVisualStyleBackColor = true;
+            this.btn_start_listening.Click += new System.EventHandler(this.btn_start_listening_Click);
+            // 
+            // btn_add_hotkey
+            // 
+            this.btn_add_hotkey.Location = new System.Drawing.Point(439, 19);
+            this.btn_add_hotkey.Name = "btn_add_hotkey";
+            this.btn_add_hotkey.Size = new System.Drawing.Size(75, 23);
+            this.btn_add_hotkey.TabIndex = 1;
+            this.btn_add_hotkey.Text = "Add Hotkey";
+            this.btn_add_hotkey.UseVisualStyleBackColor = true;
+            this.btn_add_hotkey.Click += new System.EventHandler(this.btn_add_hotkey_Click);
+            // 
+            // grid_hotkey
+            // 
+            this.grid_hotkey.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grid_hotkey.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Hotkey,
+            this.Macro});
+            this.grid_hotkey.Location = new System.Drawing.Point(3, 0);
+            this.grid_hotkey.Name = "grid_hotkey";
+            this.grid_hotkey.Size = new System.Drawing.Size(430, 308);
+            this.grid_hotkey.TabIndex = 0;
+            // 
+            // Hotkey
+            // 
+            this.Hotkey.HeaderText = "Hotkey";
+            this.Hotkey.Name = "Hotkey";
+            // 
+            // Macro
+            // 
+            this.Macro.HeaderText = "Macro file";
+            this.Macro.Name = "Macro";
+            this.Macro.ReadOnly = true;
+            this.Macro.Width = 285;
+            // 
             // btn_quit
             // 
-            this.btn_quit.Location = new System.Drawing.Point(435, 363);
+            this.btn_quit.Location = new System.Drawing.Point(415, 355);
             this.btn_quit.Name = "btn_quit";
             this.btn_quit.Size = new System.Drawing.Size(113, 23);
             this.btn_quit.TabIndex = 20;
@@ -279,11 +320,49 @@
             this.btn_quit.UseVisualStyleBackColor = true;
             this.btn_quit.Click += new System.EventHandler(this.btn_quit_Click_1);
             // 
+            // Delay
+            // 
+            this.Delay.HeaderText = "Delay";
+            this.Delay.Name = "Delay";
+            // 
+            // Event
+            // 
+            this.Event.HeaderText = "Event";
+            this.Event.Name = "Event";
+            this.Event.ReadOnly = true;
+            // 
+            // IdEvent
+            // 
+            this.IdEvent.HeaderText = "IdEvent";
+            this.IdEvent.Name = "IdEvent";
+            this.IdEvent.ReadOnly = true;
+            this.IdEvent.Visible = false;
+            // 
+            // Info
+            // 
+            this.Info.HeaderText = "Info";
+            this.Info.Name = "Info";
+            this.Info.ReadOnly = true;
+            // 
+            // IdParam1
+            // 
+            this.IdParam1.HeaderText = "IdParam1";
+            this.IdParam1.Name = "IdParam1";
+            this.IdParam1.ReadOnly = true;
+            this.IdParam1.Visible = false;
+            // 
+            // IdParam2
+            // 
+            this.IdParam2.HeaderText = "IdParam2";
+            this.IdParam2.Name = "IdParam2";
+            this.IdParam2.ReadOnly = true;
+            this.IdParam2.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(555, 397);
+            this.ClientSize = new System.Drawing.Size(543, 385);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btn_quit);
             this.Name = "Form1";
@@ -296,6 +375,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid_macro_event)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grid_hotkey)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -306,9 +387,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button btn_play_macro_until_stop;
         public System.Windows.Forms.DataGridView grid_macro_event;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Delay;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Event;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Info;
         private System.Windows.Forms.Button btn_play_macro;
         private System.Windows.Forms.CheckBox cb_keep_time;
         private System.Windows.Forms.CheckBox cb_record_all;
@@ -323,5 +401,16 @@
         private System.Windows.Forms.ComboBox combo_delay_strokes;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        public System.Windows.Forms.DataGridView grid_hotkey;
+        private System.Windows.Forms.Button btn_add_hotkey;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Hotkey;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Macro;
+        public System.Windows.Forms.Button btn_start_listening;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Delay;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Event;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IdEvent;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Info;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IdParam1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IdParam2;
     }
 }

@@ -71,52 +71,56 @@ namespace WindowsFormsApplication1
         }
         public string[] ToStrings()
         {
-            string[] ret = new string[3];
+            string[] ret = new string[6];
             ret[0] = this.Seconds.ToString();
+            ret[4] = this.Param1.ToString();
+            ret[5] = this.Param2.ToString();
+            ret[2] = ((byte)this.Type).ToString();
             if (this.Type == EventType.mouseMoved)
             {
                 ret[1] = "Mouse moved";
-                ret[2] = "(" + this.Param1 + "; " + this.Param2 + ")";
+                ret[3] = "(" + this.Param1 + "; " + this.Param2 + ")";
+                
             }
             else if (this.Type == EventType.keyDown)
             {
                 System.Windows.Forms.Keys e = (System.Windows.Forms.Keys)this.Param1;
                 ret[1] = "Key down";
-                ret[2] = e.ToString();
+                ret[3] = e.ToString();
             }
             else if (this.Type == EventType.keyUp)
             {
                 System.Windows.Forms.Keys e = (System.Windows.Forms.Keys)this.Param1;
                 ret[1] = "Key up";
-                ret[2] = e.ToString();
+                ret[3] = e.ToString();
             }
             else if (this.Type == EventType.lDown)
             {
                 ret[1] = "M1 down";
-                ret[2] = "(" + this.Param1 + "; " + this.Param2 + ")";
+                ret[3] = "(" + this.Param1 + "; " + this.Param2 + ")";
             }
             else if (this.Type == EventType.rDown)
             {
                 ret[1] = "M2 down";
-                ret[2] = "(" + this.Param1 + "; " + this.Param2 + ")";
+                ret[3] = "(" + this.Param1 + "; " + this.Param2 + ")";
             }
             else if (this.Type == EventType.lUp)
             {
                 ret[1] = "M1 up";
-                ret[2] = "(" + this.Param1 + "; " + this.Param2 + ")";
+                ret[3] = "(" + this.Param1 + "; " + this.Param2 + ")";
             }
             else if (this.Type == EventType.rUp)
             {
                 ret[1] = "M2 up";
-                ret[2] = "(" + this.Param1 + "; " + this.Param2 + ")";
+                ret[3] = "(" + this.Param1 + "; " + this.Param2 + ")";
             }
             else
             {
                 ret[1] = "Wheel";
                 if (this.param1 > 0)
-                    ret[2] = "Upward";
+                    ret[3] = "Upward";
                 else
-                    ret[2] = "Downward";
+                    ret[3] = "Downward";
             }
             return ret;
         }

@@ -7,26 +7,39 @@ using Utilities;
 using WindowsInput;
 using System.Timers;
 using System.IO;
+using System.ComponentModel;
 
 namespace WindowsFormsApplication1
 {
     class InterceptMouse
 
     {
+        public class HotMacro
+        {
+            public string hotkey { get; set; }
+            public string target { get; set; }
+            public HotMacro(string h, string t)
+            {
+                hotkey = h;
+                target = t;
+            }
+        }
         public static InputSimulator inputer = new InputSimulator();
         private static LowLevelMouseProc _proc = HookCallback;
         private static POINT posMouse;
         private static IntPtr _hookID = IntPtr.Zero;
         private static globalKeyboardHook gkh = new globalKeyboardHook();
+        private static List<HotMacro> hotKeys = new List<HotMacro>();
         private static string stopHotKey = "";
         private static KeyEventHandler newKeyEventHandlerUp;
         private static KeyEventHandler newKeyEventHandlerDown;
-        public enum Mode { none , recording, recordingAll,
-            playingUntil
+        public enum Mode { none , recording, recordingAll,   playingUntil,
+            listening
         }
         private static Mode mode = Mode.none;
         private static Stopwatch stopwatch = new Stopwatch();
         private static List<MacroEvent> recordedEvents;
+        private static Dictionary<string, bool> modKeys = new Dictionary<string, bool>();
         private static Form1 window;
         private static bool keepTime;
         private static int delayBetweenStrokes;
@@ -43,6 +56,9 @@ namespace WindowsFormsApplication1
                 Console.WriteLine(args[i]);
             }
             */
+            modKeys["Ctrl"] = false;
+            modKeys["Alt"] = false;
+            modKeys["Shift"] = false;
             _hookID = SetHook(_proc);
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
@@ -83,7 +99,7 @@ namespace WindowsFormsApplication1
             stopwatch.Start();
             //recordedEvents.Clear();
             window.grid_macro_event.Rows.Clear();
-            recordedEvents = new List<MacroEvent>();
+            //recordedEvents = new List<MacroEvent>();
             Console.WriteLine("Fin startRecording");
         }
         internal static void stopRecording()
@@ -111,18 +127,33 @@ namespace WindowsFormsApplication1
                 
             }
             window.Show();
+            stopHotKey = "";
             Console.WriteLine("Fin startPlaying");
         }
 
-        internal static void playMacro()
+        internal static void playMacro(bool alreadyLoaded=false)
         {
             Console.WriteLine("Debut playMacro");
+            POINT depart = posMouse;
             inputer.Mouse.MoveMouseTo(65535 / 2, 65535 / 2);
             double width = SystemInformation.VirtualScreen.Width;
             double height = SystemInformation.VirtualScreen.Height;
+            if (!alreadyLoaded)
+            {
+                recordedEvents = new List<MacroEvent>();
+                for (int i = 0; i < window.grid_macro_event.Rows.Count - 1; i++)
+                {
+                    long vsec = long.Parse((string)window.grid_macro_event.Rows[i].Cells[0].Value);
+                    byte vtype = byte.Parse((string)window.grid_macro_event.Rows[i].Cells[2].Value);
+                    int vParam1 = int.Parse((string)window.grid_macro_event.Rows[i].Cells[4].Value);
+                    int vParam2 = int.Parse((string)window.grid_macro_event.Rows[i].Cells[5].Value);
+                    recordedEvents.Add(new MacroEvent(vsec, (MacroEvent.EventType)vtype, vParam1, vParam2));
+                }
+            }
             for (int i = 0; i < recordedEvents.Count; i++)
             {
                 System.Threading.Thread.Sleep((int)recordedEvents[i].Seconds);
+                Console.WriteLine("Playing : " + recordedEvents[i].Seconds + ";" + recordedEvents[i].Type + ";" + recordedEvents[i].Param1 + ";" + recordedEvents[i].Param2);
                 if(recordedEvents[i].Type == MacroEvent.EventType.keyDown)
                 {
                     inputer.Keyboard.KeyDown((WindowsInput.Native.VirtualKeyCode)recordedEvents[i].Param1);
@@ -159,15 +190,45 @@ namespace WindowsFormsApplication1
                     
                 }
             }
+            double posrX = (65535 * depart.x) / width;
+            double posrY = (65535 * depart.y) / height;
+            inputer.Mouse.MoveMouseToPositionOnVirtualDesktop(posrX, posrY);
             Console.WriteLine("Fin playMacro");
         }
 
-        internal static void updateEvent(int rowIndex, int columnIndex)
+        internal static void listeningForHotkeys()
         {
-            Console.WriteLine("Debut updateEvent");
-            if(recordedEvents != null)
-                recordedEvents[rowIndex].Seconds = long.Parse((string) window.grid_macro_event.Rows[rowIndex].Cells[columnIndex].Value);
-            Console.WriteLine("Fin updateEvent");
+            if (mode == Mode.none)
+            {
+                Console.WriteLine("Listening for hk");
+                for (int i = 0; i < window.grid_hotkey.RowCount; i++)
+                {
+                    hotKeys.Add(new HotMacro((string)window.grid_hotkey.Rows[i].Cells[0].Value, (string)window.grid_hotkey.Rows[i].Cells[1].Value));
+                }
+                mode = Mode.listening;
+                window.btn_start_listening.Text = "Stop";
+            }
+            else
+            {
+                Console.WriteLine("Stop Listening for hk");
+                hotKeys.Clear();
+                mode = Mode.none;
+                window.btn_start_listening.Text = "Start";
+            }
+        }
+
+        internal static void addHotkey(string hotkey, bool ctrlMd, bool shiftMd, bool altMd, string path)
+        {
+
+            string ligne = "";
+            if (ctrlMd)
+                ligne = "Ctrl+";
+            if(shiftMd)
+                ligne += "Shift+";
+            if (altMd)
+                ligne += "Alt+";
+            ligne += hotkey;
+            window.grid_hotkey.Rows.Add(ligne, path);
         }
 
         private static void RecordEvent(MacroEvent.EventType t, int p1, int p2)
@@ -182,7 +243,7 @@ namespace WindowsFormsApplication1
                 sec = delayBetweenStrokes;
             }
             MacroEvent e = new MacroEvent(sec, t, p1, p2);
-            recordedEvents.Add(e);
+            //recordedEvents.Add(e);
             Console.WriteLine(e.ToString());
             window.grid_macro_event.Rows.Add(e.ToStrings());
             Console.WriteLine("Fin RecordEvent");
@@ -191,20 +252,25 @@ namespace WindowsFormsApplication1
         {
             Console.WriteLine("Debut LoadMacroFromFile");
             BinaryReader br;
-            List<MacroEvent> ret = new List<MacroEvent>();
             try
             {
-                br = new BinaryReader(new FileStream(path, FileMode.Open));
+                FileStream inFile = new FileStream(path, FileMode.Open);
+                br = new BinaryReader(inFile);
                 try
                 {
                     window.grid_macro_event.Rows.Clear();
-                    recordedEvents = new List<MacroEvent>();
-                    while (true)
+                    //recordedEvents = new List<MacroEvent>();
+                    while (inFile.Position != inFile.Length)
                     {
+                        Console.WriteLine("LOADING...");
                         MacroEvent cur = new MacroEvent(br.ReadInt64(), (MacroEvent.EventType)br.ReadByte(), br.ReadInt32(), br.ReadInt32());
-                        recordedEvents.Add(cur);
+                        Console.WriteLine("LOADING2...");
+                        //recordedEvents.Add(cur);
                         window.grid_macro_event.Rows.Add(cur.ToStrings());
+                        Console.WriteLine("LOADING3...");
+
                     }
+                    br.Close();
                 }
                 catch (IOException e)
                 {
@@ -223,13 +289,16 @@ namespace WindowsFormsApplication1
             Console.WriteLine("Debut SaveMacroToFile");
             // save to file
             BinaryWriter bw = new BinaryWriter(new FileStream(path, FileMode.Create));
-            for (int i = 0; i < recordedEvents.Count; ++i)
+            for (int i = 0; i < window.grid_macro_event.RowCount-1; ++i)
             {
-                MacroEvent cur = recordedEvents[i];
-                bw.Write(cur.Seconds);
-                bw.Write((byte)cur.Type);
-                bw.Write((int)cur.Param1);
-                bw.Write((int)cur.Param2);
+                long vsec = long.Parse((string)window.grid_macro_event.Rows[i].Cells[0].Value);
+                byte vtype = byte.Parse((string)window.grid_macro_event.Rows[i].Cells[2].Value);
+                int vParam1 = int.Parse((string)window.grid_macro_event.Rows[i].Cells[4].Value);
+                int vParam2 = int.Parse((string)window.grid_macro_event.Rows[i].Cells[5].Value);
+                bw.Write(vsec);
+                bw.Write(vtype);
+                bw.Write(vParam1);
+                bw.Write(vParam2);
             }
             bw.Close();
             Console.WriteLine("Fin SaveMacroToFile");
@@ -264,13 +333,90 @@ namespace WindowsFormsApplication1
             {
                 RecordEvent(MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode);
             }
+            else if(mode == Mode.listening)
+            {
+                Console.WriteLine("Mode Listening key up");
+                if (e.KeyCode == Keys.LControlKey)
+                    modKeys["Ctrl"] = false;
+                else if (e.KeyCode == Keys.LShiftKey)
+                    modKeys["Shift"] = false;
+                else if (e.KeyCode == Keys.Alt)
+                    modKeys["Alt"] = false;
+                for (int i = 0; i < hotKeys.Count-1; i++)
+                {
+                    List<string> keysNeeded = new List<string>(hotKeys[i].hotkey.Split("+".ToCharArray()));
+                    Console.WriteLine("Registered hot key:" + hotKeys[i].hotkey + "("+ keysNeeded[keysNeeded.Count - 1] + ")");
+                    if (e.KeyCode.ToString() == keysNeeded[keysNeeded.Count - 1]) {
+                        if(modKeys["Ctrl"] == keysNeeded.Contains("Ctrl") && modKeys["Shift"] == keysNeeded.Contains("Shift") && modKeys["Alt"] == keysNeeded.Contains("Alt"))
+                        {
+                            Console.WriteLine("Hotkey pressed !");
+                            BackgroundWorker bw = new BackgroundWorker();
+                            bw.DoWork += new DoWorkEventHandler(
+                                delegate (object o, DoWorkEventArgs args)
+                                {
+                                    BackgroundWorker b = o as BackgroundWorker;
+                                    string target = (string)args.Argument;
+                                    Console.WriteLine("target : " + target);
+                                    LoadMacroFromFileNoGUI(target);
+                                    playMacro(true);
+                                }
+                            );
+                            bw.RunWorkerAsync(hotKeys[i].target);
+                        }
+                    }
+                }
+                e.Handled = true;
+            }
             e.Handled = false;
             //Console.WriteLine("Fin gkh_KeyUp");
         }
+        private static void LoadMacroFromFileNoGUI(string path)
+        {
+            Console.WriteLine("Debut LoadMacroFromFileNOGUI");
+            BinaryReader br;
+            try
+            {
+                FileStream inFile = new FileStream(path, FileMode.Open);
+                br = new BinaryReader(inFile);
+                try
+                {
+                    //window.grid_macro_event.Rows.Clear();
+                    recordedEvents = new List<MacroEvent>();
+                    while (inFile.Position != inFile.Length)
+                    {
+                        Console.WriteLine("LOADING...");
+                        MacroEvent cur = new MacroEvent(br.ReadInt64(), (MacroEvent.EventType)br.ReadByte(), br.ReadInt32(), br.ReadInt32());
+                        Console.WriteLine("LOADING2...");
+                        recordedEvents.Add(cur);
+                        //window.grid_macro_event.Rows.Add(cur.ToStrings());
+                        Console.WriteLine("LOADING3...");
+
+                    }
+                    br.Close();
+                }
+                catch (IOException e)
+                {
+                    br.Close();
+                    Console.WriteLine(e.Message + "\n Cannot read from file.");
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message + "\n Cannot open file.");
+            }
+            Console.WriteLine("Fin LoadMacroFromFile");
+        }
+
         //EVENT KEY DOWN
         public static void gkh_KeyDown(object sender, KeyEventArgs e)
         {
             //eConsole.WriteLine("Debut gkh_KeyDown");
+            if (e.KeyCode == Keys.LControlKey)
+                modKeys["Ctrl"] = true;
+            else if (e.KeyCode == Keys.LShiftKey)
+                modKeys["Shift"] = true;
+            else if (e.KeyCode == Keys.Alt)
+                modKeys["Alt"] = true;
             Console.WriteLine("Down\t" + e.KeyCode.ToString());
             if (e.KeyCode.ToString() != stopHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
             {

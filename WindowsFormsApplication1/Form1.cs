@@ -102,13 +102,6 @@ namespace WindowsFormsApplication1
             this.Show();
         }
 
-
-        private void grid_macro_event_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            Console.WriteLine("CELL UPDATED");
-            InterceptMouse.updateEvent(e.RowIndex, e.ColumnIndex);
-        }
-
         private void btn_play_macro_until_stop_Click(object sender, EventArgs e)
         {
             if (!this.combo_stop_hotkey.Text.StartsWith("F"))
@@ -139,6 +132,29 @@ namespace WindowsFormsApplication1
         {
             this.Dispose();
             
+        }
+
+        private void btn_add_hotkey_Click(object sender, EventArgs e)
+        {
+            EnterHotkey dialog = new EnterHotkey();
+            DialogResult val = dialog.ShowDialog();
+            if (val == DialogResult.OK)
+            {
+                string path;
+                OpenFileDialog file = new OpenFileDialog();
+                file.Filter = "easy macro files (*.ema)|*.ema|All files (*.*)|*.*";
+                if (file.ShowDialog() == DialogResult.OK)
+                {
+                    path = file.FileName;
+                    InterceptMouse.addHotkey(dialog.returnValue1, dialog.returnValue2, dialog.returnValue3, dialog.returnValue4, path);
+                }
+            }
+            
+        }
+
+        private void btn_start_listening_Click(object sender, EventArgs e)
+        {
+            InterceptMouse.listeningForHotkeys();
         }
 
     }
