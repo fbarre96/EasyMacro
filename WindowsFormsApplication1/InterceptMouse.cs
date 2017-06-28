@@ -18,12 +18,15 @@ namespace WindowsFormsApplication1
         {
             public string hotkey { get; set; }
             public string target { get; set; }
-            public HotMacro(string h, string t)
+            public bool continuous { get; set; }
+            public HotMacro(string h, string t, bool c)
             {
                 hotkey = h;
                 target = t;
+                continuous = c;
             }
         }
+        
         public static InputSimulator inputer = new InputSimulator();
         private static LowLevelMouseProc _proc = HookCallback;
         private static POINT posMouse;
@@ -198,12 +201,13 @@ namespace WindowsFormsApplication1
 
         internal static void listeningForHotkeys()
         {
-            if (mode == Mode.none)
+            Console.WriteLine("ListeningForHotkeys debut");
+            if (mode != Mode.listening)
             {
                 Console.WriteLine("Listening for hk");
-                for (int i = 0; i < window.grid_hotkey.RowCount; i++)
+                for (int i = 0; i < window.grid_hotkey.RowCount-1; i++)
                 {
-                    hotKeys.Add(new HotMacro((string)window.grid_hotkey.Rows[i].Cells[0].Value, (string)window.grid_hotkey.Rows[i].Cells[1].Value));
+                    hotKeys.Add(new HotMacro((string)window.grid_hotkey.Rows[i].Cells[0].Value, (string)window.grid_hotkey.Rows[i].Cells[1].Value, (bool)window.grid_hotkey.Rows[i].Cells[2].Value));
                 }
                 mode = Mode.listening;
                 window.btn_start_listening.Text = "Stop";
@@ -217,10 +221,12 @@ namespace WindowsFormsApplication1
                 hotKeys.Clear();
                 mode = Mode.none;
                 window.btn_start_listening.Text = "Start";
+                
             }
+            window.btn_start_listening.Refresh();
         }
 
-        internal static void addHotkey(string hotkey, bool ctrlMd, bool shiftMd, bool altMd, string path)
+        internal static void addHotkey(string hotkey, bool ctrlMd, bool shiftMd, bool altMd, string path, bool continuous)
         {
 
             string ligne = "";
@@ -231,7 +237,14 @@ namespace WindowsFormsApplication1
             if (altMd)
                 ligne += "Alt+";
             ligne += hotkey;
-            window.grid_hotkey.Rows.Add(ligne, path);
+            window.grid_hotkey.Rows.Add(ligne, path, continuous);
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter("RegHotkeys.cfg"))
+            {
+                for (int i = 0; i < window.grid_hotkey.Rows.Count-1; i++)
+                {
+                    file.WriteLine(window.grid_hotkey.Rows[i].Cells[0].Value + " | " + window.grid_hotkey.Rows[i].Cells[1].Value + " | " + window.grid_hotkey.Rows[i].Cells[2].Value);
+                }
+            }
         }
 
         private static void RecordEvent(MacroEvent.EventType t, int p1, int p2)
@@ -331,21 +344,21 @@ namespace WindowsFormsApplication1
         public static void gkh_KeyUp(object sender, KeyEventArgs e)
         {
             //Console.WriteLine("Debut gkh_KeyUp");
-            //Console.WriteLine("Up\t" + e.KeyCode.ToString());
+            Console.WriteLine("Up\t" + e.KeyCode.ToString());
             if (mode == Mode.recording || mode == Mode.recordingAll)
             {
                 RecordEvent(MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode);
             }
             else if(mode == Mode.listening)
             {
-                Console.WriteLine("Mode Listening key up");
+                Console.WriteLine("Mode Listening key up (#hk:"+hotKeys.Count+")");
                 if (e.KeyCode == Keys.LControlKey)
                     modKeys["Ctrl"] = false;
                 else if (e.KeyCode == Keys.LShiftKey)
                     modKeys["Shift"] = false;
                 else if (e.KeyCode == Keys.Alt)
                     modKeys["Alt"] = false;
-                for (int i = 0; i < hotKeys.Count-1; i++)
+                for (int i = 0; i < hotKeys.Count; i++)
                 {
                     List<string> keysNeeded = new List<string>(hotKeys[i].hotkey.Split("+".ToCharArray()));
                     Console.WriteLine("Registered hot key:" + hotKeys[i].hotkey + "("+ keysNeeded[keysNeeded.Count - 1] + ")");
@@ -358,20 +371,49 @@ namespace WindowsFormsApplication1
                                 delegate (object o, DoWorkEventArgs args)
                                 {
                                     BackgroundWorker b = o as BackgroundWorker;
-                                    string target = (string)args.Argument;
-                                    Console.WriteLine("target : " + target);
-                                    if(target == "Stop")
+                                    List<object> argus = (List<object>)args.Argument;
+                                    string target = (string)argus[0];
+                                    bool cont = (bool)argus[1];
+                                    Console.WriteLine(@"
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+                                                ");
+                                    if (target == "Stop")
                                     {
                                         listeningForHotkeys();
                                     }
                                     else
                                     {
                                         LoadMacroFromFileNoGUI(target);
-                                        playMacro(true);
+                                        if (cont && mode == Mode.listening)
+                                        {
+                                            mode = Mode.playingUntil;
+                                            while (mode == Mode.playingUntil)
+                                            {
+                                                playMacro(true);
+                                                Console.WriteLine("Mode :   " + mode);
+                                            }
+                                        }
+                                        else if (cont && mode == Mode.playingUntil)
+                                        {
+                                            mode = Mode.listening;
+                                        }
+                                        else // not continuous, just play once
+                                            playMacro(true);
                                     }
                                 }
                             );
-                            bw.RunWorkerAsync(hotKeys[i].target);
+                            List<object> arguments = new List<Object>(2);
+                            arguments.Add(hotKeys[i].target);
+                            arguments.Add(hotKeys[i].continuous);
+                            bw.RunWorkerAsync(arguments);
                         }
                     }
                 }

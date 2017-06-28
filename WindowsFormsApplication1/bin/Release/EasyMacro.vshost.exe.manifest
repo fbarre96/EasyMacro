@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="EasyMacro.exe" size="35768">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="EasyMacro.exe" size="39864">
       <assemblyIdentity name="EasyMacro" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rsGW5J33OO5v60v9sbitq+735ujyj+iRDgaBLVWB/AM=</dsig:DigestValue>
+        <dsig:DigestValue>nDMBf7LgVPE1BN/KGvJuLG+KhhQt4NLALC7PFk5FnSw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

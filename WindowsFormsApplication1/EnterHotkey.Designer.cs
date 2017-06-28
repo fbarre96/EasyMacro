@@ -37,6 +37,7 @@
             this.combo_htotkey = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.combo_action = new System.Windows.Forms.ComboBox();
+            this.cb_play_until = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -73,7 +74,7 @@
             // 
             // btn_ok
             // 
-            this.btn_ok.Location = new System.Drawing.Point(113, 152);
+            this.btn_ok.Location = new System.Drawing.Point(113, 203);
             this.btn_ok.Name = "btn_ok";
             this.btn_ok.Size = new System.Drawing.Size(85, 23);
             this.btn_ok.TabIndex = 5;
@@ -83,7 +84,7 @@
             // 
             // btn_cancel
             // 
-            this.btn_cancel.Location = new System.Drawing.Point(12, 152);
+            this.btn_cancel.Location = new System.Drawing.Point(12, 203);
             this.btn_cancel.Name = "btn_cancel";
             this.btn_cancel.Size = new System.Drawing.Size(92, 23);
             this.btn_cancel.TabIndex = 6;
@@ -93,13 +94,14 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cb_play_until);
             this.groupBox1.Controls.Add(this.combo_htotkey);
             this.groupBox1.Controls.Add(this.cb_alt);
             this.groupBox1.Controls.Add(this.cb_ctrl);
             this.groupBox1.Controls.Add(this.cb_shift);
             this.groupBox1.Location = new System.Drawing.Point(26, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(172, 66);
+            this.groupBox1.Size = new System.Drawing.Size(172, 114);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Hotkey Modifiers";
@@ -120,7 +122,7 @@
             "F10",
             "F11",
             "F12"});
-            this.combo_htotkey.Location = new System.Drawing.Point(70, 39);
+            this.combo_htotkey.Location = new System.Drawing.Point(56, 42);
             this.combo_htotkey.Name = "combo_htotkey";
             this.combo_htotkey.Size = new System.Drawing.Size(52, 21);
             this.combo_htotkey.TabIndex = 9;
@@ -129,7 +131,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.combo_action);
-            this.groupBox2.Location = new System.Drawing.Point(26, 84);
+            this.groupBox2.Location = new System.Drawing.Point(25, 142);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(172, 55);
             this.groupBox2.TabIndex = 9;
@@ -148,12 +150,23 @@
             this.combo_action.Size = new System.Drawing.Size(160, 21);
             this.combo_action.TabIndex = 9;
             this.combo_action.Text = "Target macro file";
+            this.combo_action.SelectedIndexChanged += new System.EventHandler(this.combo_action_SelectedIndexChanged);
+            // 
+            // cb_play_until
+            // 
+            this.cb_play_until.AutoSize = true;
+            this.cb_play_until.Location = new System.Drawing.Point(42, 79);
+            this.cb_play_until.Name = "cb_play_until";
+            this.cb_play_until.Size = new System.Drawing.Size(79, 17);
+            this.cb_play_until.TabIndex = 10;
+            this.cb_play_until.Text = "Continuous";
+            this.cb_play_until.UseVisualStyleBackColor = true;
             // 
             // EnterHotkey
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(225, 187);
+            this.ClientSize = new System.Drawing.Size(209, 238);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btn_cancel);
@@ -177,5 +190,6 @@
         private System.Windows.Forms.ComboBox combo_htotkey;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox combo_action;
+        private System.Windows.Forms.CheckBox cb_play_until;
     }
 }

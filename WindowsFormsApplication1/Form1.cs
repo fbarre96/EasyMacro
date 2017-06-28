@@ -33,6 +33,24 @@ namespace WindowsFormsApplication1
                 this.combo_delay_strokes.Items.Add("" + i);
             }
             this.combo_delay_strokes.Text = "20";
+            try
+            {
+                string[] lines = System.IO.File.ReadAllLines("RegHotkeys.cfg");
+                foreach(string line in lines)
+                {
+                    if (line != "\n" && line != "")
+                    {
+                        string[] parts = line.Split('|');
+                        bool continuous = (parts[2].Trim() == "True");
+                        grid_hotkey.Rows.Add(parts[0].Trim(), parts[1].Trim(), continuous);
+                    }
+                }
+            }
+            catch (System.IO.FileNotFoundException ex)
+            {
+                Console.WriteLine(ex);
+            }
+
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -148,15 +166,17 @@ namespace WindowsFormsApplication1
                     if (file.ShowDialog() == DialogResult.OK)
                     {
                         path = file.FileName;
-                        InterceptMouse.addHotkey(dialog.returnValue1, dialog.returnValue2, dialog.returnValue3, dialog.returnValue4, path);
+                        InterceptMouse.addHotkey(dialog.returnValue1, dialog.returnValue2, dialog.returnValue3, dialog.returnValue4, path, dialog.returnValue6);
                     }
                 }
                 else
                 {
-                    InterceptMouse.addHotkey(dialog.returnValue1, dialog.returnValue2, dialog.returnValue3, dialog.returnValue4, "Stop");
+                    InterceptMouse.addHotkey(dialog.returnValue1, dialog.returnValue2, dialog.returnValue3, dialog.returnValue4, "Stop", false);
                 }
+                
+
             }
-            
+
         }
 
         private void btn_start_listening_Click(object sender, EventArgs e)
