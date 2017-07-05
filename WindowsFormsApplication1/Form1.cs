@@ -45,6 +45,7 @@ namespace WindowsFormsApplication1
                         grid_hotkey.Rows.Add(parts[0].Trim(), parts[1].Trim(), continuous);
                     }
                 }
+                InterceptMouse.UpdateHotKeysFromView();
             }
             catch (System.IO.FileNotFoundException ex)
             {
@@ -181,7 +182,7 @@ namespace WindowsFormsApplication1
 
         private void btn_start_listening_Click(object sender, EventArgs e)
         {
-            InterceptMouse.listeningForHotkeys();
+            InterceptMouse.toogleListeningForHotkeys();
         }
 
     }
