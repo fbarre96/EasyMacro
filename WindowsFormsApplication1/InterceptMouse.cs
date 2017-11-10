@@ -76,10 +76,6 @@ namespace WindowsFormsApplication1
                 LoadMacroFromFile(args[1]);
 
             }
-            else
-            {
-                Console.WriteLine(args.Length);
-            }
             Application.Run(window);
             //Application.Run();
             bool ret = UnhookWindowsHookEx(_hookID);
@@ -200,21 +196,27 @@ namespace WindowsFormsApplication1
             double posrX = (65535 * depart.x) / width;
             double posrY = (65535 * depart.y) / height;
             inputer.Mouse.MoveMouseToPositionOnVirtualDesktop(posrX, posrY);
+
+            try
+            {
+                gkh.hook();
+            }catch (InvalidOperationException io)
+            {
+                Console.WriteLine(io);
+            }
             Console.WriteLine("Fin playMacro");
         }
 
-        internal static void listeningForHotkeys()
+        internal static void toogleListeningForHotkeys()
         {
             Console.WriteLine("ListeningForHotkeys debut");
+
             if (mode != Mode.listening)
             {
-                Console.WriteLine("Listening for hk");
-                for (int i = 0; i < window.grid_hotkey.RowCount-1; i++)
-                {
-                    hotKeys.Add(new HotMacro((string)window.grid_hotkey.Rows[i].Cells[0].Value, (string)window.grid_hotkey.Rows[i].Cells[1].Value, (bool)window.grid_hotkey.Rows[i].Cells[2].Value));
-                }
+                Console.WriteLine("Updating for hk");
+                UpdateHotKeysFromView();
                 mode = Mode.listening;
-                window.btn_start_listening.Text = "Stop";
+                window.btn_start_listening.Invoke(new Action(() => window.btn_start_listening.Text = "Stop"));
                 modKeys["Ctrl"] = false;
                 modKeys["Shift"] = false;
                 modKeys["Alt"] = false;
@@ -222,17 +224,24 @@ namespace WindowsFormsApplication1
             else
             {
                 Console.WriteLine("Stop Listening for hk");
-                hotKeys.Clear();
-                mode = Mode.none;
-                window.btn_start_listening.Text = "Start";
                 
+                mode = Mode.none;
+                window.btn_start_listening.Invoke(new Action(() => window.btn_start_listening.Text = "Start"));
             }
-            window.btn_start_listening.Refresh();
+            
+        }
+
+        internal static void UpdateHotKeysFromView()
+        {
+            hotKeys.Clear();
+            for (int i = 0; i < window.grid_hotkey.RowCount - 1; i++)
+            {
+                hotKeys.Add(new HotMacro((string)window.grid_hotkey.Rows[i].Cells[0].Value, (string)window.grid_hotkey.Rows[i].Cells[1].Value, (bool)window.grid_hotkey.Rows[i].Cells[2].Value));
+            }
         }
 
         internal static void addHotkey(string hotkey, bool ctrlMd, bool shiftMd, bool altMd, string path, bool continuous)
         {
-
             string ligne = "";
             if (ctrlMd)
                 ligne = "Ctrl+";
@@ -343,89 +352,6 @@ namespace WindowsFormsApplication1
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
-
-        //EVENT KEY UP
-        public static void gkh_KeyUp(object sender, KeyEventArgs e)
-        {
-            //Console.WriteLine("Debut gkh_KeyUp");
-            Console.WriteLine("Up\t" + e.KeyCode.ToString());
-            if (mode == Mode.recording || mode == Mode.recordingAll)
-            {
-                RecordEvent(MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode);
-            }
-            else if(mode == Mode.listening || mode == Mode.playingUntil)
-            {
-                Console.WriteLine("Mode Listening key up (#hk:"+hotKeys.Count+")");
-                if (e.KeyCode == Keys.LControlKey)
-                    modKeys["Ctrl"] = false;
-                else if (e.KeyCode == Keys.LShiftKey)
-                    modKeys["Shift"] = false;
-                else if (e.KeyCode == Keys.Alt)
-                    modKeys["Alt"] = false;
-                for (int i = 0; i < hotKeys.Count; i++)
-                {
-                    List<string> keysNeeded = new List<string>(hotKeys[i].hotkey.Split("+".ToCharArray()));
-                    Console.WriteLine("Registered hot key:" + hotKeys[i].hotkey + "("+ keysNeeded[keysNeeded.Count - 1] + ")");
-                    if (e.KeyCode.ToString() == keysNeeded[keysNeeded.Count - 1]) {
-                        if(modKeys["Ctrl"] == keysNeeded.Contains("Ctrl") && modKeys["Shift"] == keysNeeded.Contains("Shift") && modKeys["Alt"] == keysNeeded.Contains("Alt"))
-                        {
-                            Console.WriteLine("Hotkey pressed !");
-                            BackgroundWorker bw = new BackgroundWorker();
-                            bw.DoWork += new DoWorkEventHandler(
-                                delegate (object o, DoWorkEventArgs args)
-                                {
-                                    BackgroundWorker b = o as BackgroundWorker;
-                                    List<object> argus = (List<object>)args.Argument;
-                                    string target = (string)argus[0];
-                                    bool cont = (bool)argus[1];
-                                    Console.WriteLine(@"
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
-                                                ");
-                                    if (target == "Stop")
-                                    {
-                                        listeningForHotkeys();
-                                    }
-                                    else
-                                    {
-                                        LoadMacroFromFileNoGUI(target);
-                                        if (cont && mode == Mode.listening)
-                                        {
-                                            mode = Mode.playingUntil;
-                                            while (mode == Mode.playingUntil)
-                                            {
-                                                playMacro(true);
-                                                Console.WriteLine("Mode :   " + mode);
-                                            }
-                                        }
-                                        else if (cont && mode == Mode.playingUntil)
-                                        {
-                                            mode = Mode.listening;
-                                        }
-                                        else // not continuous, just play once
-                                            playMacro(true);
-                                    }
-                                }
-                            );
-                            List<object> arguments = new List<Object>(2);
-                            arguments.Add(hotKeys[i].target);
-                            arguments.Add(hotKeys[i].continuous);
-                            bw.RunWorkerAsync(arguments);
-                        }
-                    }
-                }
-                e.Handled = true;
-            }
-            e.Handled = false;
-            //Console.WriteLine("Fin gkh_KeyUp");
-        }
         private static void LoadMacroFromFileNoGUI(string path)
         {
             Console.WriteLine("Debut LoadMacroFromFileNOGUI");
@@ -463,6 +389,78 @@ TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
             Console.WriteLine("Fin LoadMacroFromFile");
         }
 
+        //EVENT KEY UP
+        public static void gkh_KeyUp(object sender, KeyEventArgs e)
+        {
+            //Console.WriteLine("Debut gkh_KeyUp");
+            Console.WriteLine("Up\t" + e.KeyCode.ToString() + " Mode:"+ mode);
+            if (mode == Mode.recording || mode == Mode.recordingAll)
+            {
+                RecordEvent(MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode);
+            }
+            else
+            {
+                Console.WriteLine("Mode Listening key up (#hk:"+hotKeys.Count+")");
+                if (e.KeyCode == Keys.LControlKey)
+                    modKeys["Ctrl"] = false;
+                else if (e.KeyCode == Keys.LShiftKey)
+                    modKeys["Shift"] = false;
+                else if (e.KeyCode == Keys.Alt)
+                    modKeys["Alt"] = false;
+                for (int i = 0; i < hotKeys.Count; i++)
+                {
+                    List<string> keysNeeded = new List<string>(hotKeys[i].hotkey.Split("+".ToCharArray()));
+                    Console.WriteLine("Registered hot key:" + hotKeys[i].hotkey + "("+ keysNeeded[keysNeeded.Count - 1] + ")");
+                    if (e.KeyCode.ToString() == keysNeeded[keysNeeded.Count - 1]) {
+                        if(modKeys["Ctrl"] == keysNeeded.Contains("Ctrl") && modKeys["Shift"] == keysNeeded.Contains("Shift") && modKeys["Alt"] == keysNeeded.Contains("Alt"))
+                        {
+                            Console.WriteLine("Hotkey pressed"+ hotKeys[i].hotkey + " !");
+                            BackgroundWorker bw = new BackgroundWorker();
+                            bw.DoWork += new DoWorkEventHandler(
+                                delegate (object o, DoWorkEventArgs args)
+                                {
+                                    BackgroundWorker b = o as BackgroundWorker;
+                                    List<object> argus = (List<object>)args.Argument;
+                                    string target = (string)argus[0];
+                                    bool cont = (bool)argus[1];
+                                    if (target == "Stop" && (mode == Mode.none || mode == Mode.listening)) // Can't stop while playing
+                                    {
+                                        toogleListeningForHotkeys();
+                                    }
+                                    else if (mode == Mode.listening || mode == Mode.playingUntil)
+                                    {
+                                        LoadMacroFromFileNoGUI(target);
+                                        if (cont && mode == Mode.listening)
+                                        {
+                                            mode = Mode.playingUntil;
+                                            while (mode == Mode.playingUntil)
+                                            {
+                                                playMacro(true);
+                                                Console.WriteLine("Mode :   " + mode);
+                                            }
+                                        }
+                                        else if (cont && mode == Mode.playingUntil)
+                                        {
+                                            mode = Mode.listening;
+                                        }
+                                        else // not continuous, just play once
+                                            playMacro(true);
+                                    }
+                                }
+                            );
+                            List<object> arguments = new List<Object>(2);
+                            arguments.Add(hotKeys[i].target);
+                            arguments.Add(hotKeys[i].continuous);
+                            bw.RunWorkerAsync(arguments);
+                        }
+                    }
+                }
+                //e.Handled = true;
+            }
+            e.Handled = false;
+            //Console.WriteLine("Fin gkh_KeyUp");
+        }
+
         //EVENT KEY DOWN
         public static void gkh_KeyDown(object sender, KeyEventArgs e)
         {
@@ -474,6 +472,7 @@ TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
             else if (e.KeyCode == Keys.Alt)
                 modKeys["Alt"] = true;
             Console.WriteLine("Down\t" + e.KeyCode.ToString());
+  
             if (e.KeyCode.ToString() != stopHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
             {
                 RecordEvent(MacroEvent.EventType.keyDown, (int)e.KeyCode, (int)e.KeyCode);
