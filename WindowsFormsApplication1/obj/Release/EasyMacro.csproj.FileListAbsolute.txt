@@ -17,3 +17,4 @@ C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyM
 C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.TrustInfo.xml
 C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.csprojResolveAssemblyReference.cache
 C:\Users\Barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.EnterHotkey.resources
+C:\Users\barre\Source\Repos\EasyMacro\WindowsFormsApplication1\obj\Release\EasyMacro.csproj.CoreCompileInputs.cache

@@ -76,6 +76,10 @@ namespace WindowsFormsApplication1
                 LoadMacroFromFile(args[1]);
 
             }
+            else
+            {
+                Console.WriteLine(args.Length);
+            }
             Application.Run(window);
             //Application.Run();
             bool ret = UnhookWindowsHookEx(_hookID);
@@ -349,7 +353,7 @@ namespace WindowsFormsApplication1
             {
                 RecordEvent(MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode);
             }
-            else if(mode == Mode.listening)
+            else if(mode == Mode.listening || mode == Mode.playingUntil)
             {
                 Console.WriteLine("Mode Listening key up (#hk:"+hotKeys.Count+")");
                 if (e.KeyCode == Keys.LControlKey)
