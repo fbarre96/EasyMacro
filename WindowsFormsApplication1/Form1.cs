@@ -63,9 +63,10 @@ namespace WindowsFormsApplication1
             Console.WriteLine("Start recording");
             if (!this.combo_stop_hotkey.Text.StartsWith("F"))
             {
-                MessageBox.Show("Select a hotkey to stop macro recording !", "EasyMacro", MessageBoxButtons.OK);
+                MessageBox.Show("Select a hotkey to toogle macro recording !", "EasyMacro", MessageBoxButtons.OK);
             }
             else {
+                MessageBox.Show("Press "+ this.combo_stop_hotkey.Text + "to start recording the macro, then press it again when you finished.", "EasyMacro", MessageBoxButtons.OK);
                 InterceptMouse.startRecording(this.combo_stop_hotkey.Text, this.cb_record_all.Checked, this.cb_keep_time.Checked, int.Parse(this.combo_delay_strokes.Text));
             }
         }
@@ -117,6 +118,7 @@ namespace WindowsFormsApplication1
         private void btn_play_macro_Click(object sender, EventArgs e)
         {
             this.Hide();
+           
             InterceptMouse.playMacro();
             this.Show();
         }
@@ -184,6 +186,7 @@ namespace WindowsFormsApplication1
         {
             InterceptMouse.toogleListeningForHotkeys();
         }
+
 
     }
 }

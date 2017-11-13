@@ -280,7 +280,7 @@
             "F10",
             "F11",
             "F12"});
-            this.combo_stop_hotkey.Location = new System.Drawing.Point(89, 6);
+            this.combo_stop_hotkey.Location = new System.Drawing.Point(130, 6);
             this.combo_stop_hotkey.Name = "combo_stop_hotkey";
             this.combo_stop_hotkey.Size = new System.Drawing.Size(121, 21);
             this.combo_stop_hotkey.TabIndex = 15;
@@ -290,9 +290,9 @@
             this.lbl_stop_hotkey.AutoSize = true;
             this.lbl_stop_hotkey.Location = new System.Drawing.Point(5, 9);
             this.lbl_stop_hotkey.Name = "lbl_stop_hotkey";
-            this.lbl_stop_hotkey.Size = new System.Drawing.Size(67, 13);
+            this.lbl_stop_hotkey.Size = new System.Drawing.Size(122, 13);
             this.lbl_stop_hotkey.TabIndex = 14;
-            this.lbl_stop_hotkey.Text = "Stop HotKey";
+            this.lbl_stop_hotkey.Text = "Toggle recording hotkey";
             // 
             // tabPage2
             // 

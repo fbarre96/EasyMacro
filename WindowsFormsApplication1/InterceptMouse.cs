@@ -33,10 +33,10 @@ namespace WindowsFormsApplication1
         private static IntPtr _hookID = IntPtr.Zero;
         private static globalKeyboardHook gkh = new globalKeyboardHook();
         private static List<HotMacro> hotKeys = new List<HotMacro>();
-        private static string stopHotKey = "";
+        private static string toogleHotKey = "";
         private static KeyEventHandler newKeyEventHandlerUp;
         private static KeyEventHandler newKeyEventHandlerDown;
-        public enum Mode { none , recording, recordingAll,   playingUntil,
+        public enum Mode { none , listenForRecording, listenForRecordingAll, recording, recordingAll,   playingUntil, playing,
             listening
         }
         private static Mode mode = Mode.none;
@@ -85,19 +85,18 @@ namespace WindowsFormsApplication1
         internal static void startRecording(string hotkey, bool record_all, bool keep_time, int delay=50)
         {
             Console.WriteLine("Debut startRecording");
-            inputer.Mouse.MoveMouseTo(65535 / 2.0, 65535 / 2.0);
 
             window.Hide();
-            stopHotKey = hotkey;
+            toogleHotKey = hotkey;
             if (record_all) {
-                mode = Mode.recordingAll;
+                mode = Mode.listenForRecordingAll;
             }
             else { 
-                mode = Mode.recording;
+                mode = Mode.listenForRecording;
                 keepTime = keep_time;
                 delayBetweenStrokes = delay; 
             }
-            Console.WriteLine("Start recording : stop key " + hotkey + "( warp !" + (SystemInformation.VirtualScreen.Width / 2.0));
+            //Console.WriteLine("Start recording : stop key " + hotkey + "( warp !" + (SystemInformation.VirtualScreen.Width / 2.0));
             //inputer.Mouse.MoveMouseTo(10,10);
             stopwatch.Start();
             //recordedEvents.Clear();
@@ -108,7 +107,7 @@ namespace WindowsFormsApplication1
         internal static void stopRecording()
         {
             Console.WriteLine("Debut stopRecording");
-            stopHotKey = "";
+            toogleHotKey = "";
             mode = Mode.none;
             stopwatch.Stop();
             Console.WriteLine("Stop recording !");
@@ -118,7 +117,7 @@ namespace WindowsFormsApplication1
         internal static void startPlaying(string hotkey)
         {
             Console.WriteLine("Debut startPlaying");
-            stopHotKey = hotkey;
+            toogleHotKey = hotkey;
             mode = Mode.playingUntil;
             //Console.WriteLine("Start playing : stop key " + hotkey + "( warp !" + (SystemInformation.VirtualScreen.Width / 2.0));
             window.Hide();
@@ -127,18 +126,22 @@ namespace WindowsFormsApplication1
                 
                 playMacro();
                 Console.WriteLine("mode : " + mode);
-                
             }
             window.Show();
-            stopHotKey = "";
+            toogleHotKey = "";
             Console.WriteLine("Fin startPlaying");
         }
 
         internal static void playMacro(bool alreadyLoaded=false)
         {
             Console.WriteLine("Debut playMacro");
+            Mode oldMode = mode;
+            if( mode != Mode.playingUntil)
+            {
+                mode = Mode.playing;
+            }
             POINT depart = posMouse;
-            inputer.Mouse.MoveMouseTo(65535 / 2, 65535 / 2);
+            //inputer.Mouse.MoveMouseTo(65535 / 2, 65535 / 2);
             double width = SystemInformation.VirtualScreen.Width;
             double height = SystemInformation.VirtualScreen.Height;
             if (!alreadyLoaded)
@@ -153,7 +156,7 @@ namespace WindowsFormsApplication1
                     recordedEvents.Add(new MacroEvent(vsec, (MacroEvent.EventType)vtype, vParam1, vParam2));
                 }
             }
-            for (int i = 0; i < recordedEvents.Count; i++)
+            for (int i = 0; i < recordedEvents.Count && (mode == Mode.playingUntil || mode == Mode.playing); i++)
             {
                 System.Threading.Thread.Sleep((int)recordedEvents[i].Seconds);
                 Console.WriteLine("Playing : " + recordedEvents[i].Seconds + ";" + recordedEvents[i].Type + ";" + recordedEvents[i].Param1 + ";" + recordedEvents[i].Param2);
@@ -171,9 +174,7 @@ namespace WindowsFormsApplication1
                 }
                 else
                 {
-                    double posX = (65535 * recordedEvents[i].Param1) / width;
-                    double posY = (65535 * recordedEvents[i].Param2) / height;
-                    inputer.Mouse.MoveMouseToPositionOnVirtualDesktop(posX, posY);
+
                     if (recordedEvents[i].Type == MacroEvent.EventType.lDown)
                     {
                         inputer.Mouse.LeftButtonDown();
@@ -193,17 +194,18 @@ namespace WindowsFormsApplication1
                     
                 }
             }
-            double posrX = (65535 * depart.x) / width;
-            double posrY = (65535 * depart.y) / height;
-            inputer.Mouse.MoveMouseToPositionOnVirtualDesktop(posrX, posrY);
+            if(mode == Mode.playing)
+            {
+                mode = oldMode;
+            }
 
-            try
+            /*try
             {
                 gkh.hook();
             }catch (InvalidOperationException io)
             {
                 Console.WriteLine(io);
-            }
+            }*/
             Console.WriteLine("Fin playMacro");
         }
 
@@ -398,6 +400,14 @@ namespace WindowsFormsApplication1
             {
                 RecordEvent(MacroEvent.EventType.keyUp,(int) e.KeyCode, (int)e.KeyCode);
             }
+            else if (mode == Mode.listenForRecording)
+            {
+                mode = Mode.recording;
+            }
+            else if (mode == Mode.listenForRecordingAll)
+            {
+                mode = Mode.recordingAll;
+            }
             else
             {
                 Console.WriteLine("Mode Listening key up (#hk:"+hotKeys.Count+")");
@@ -473,15 +483,15 @@ namespace WindowsFormsApplication1
                 modKeys["Alt"] = true;
             Console.WriteLine("Down\t" + e.KeyCode.ToString());
   
-            if (e.KeyCode.ToString() != stopHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
+            if (e.KeyCode.ToString() != toogleHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
             {
                 RecordEvent(MacroEvent.EventType.keyDown, (int)e.KeyCode, (int)e.KeyCode);
             }
-            else if (e.KeyCode.ToString() == stopHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
+            else if (e.KeyCode.ToString() == toogleHotKey && (mode == Mode.recording || mode == Mode.recordingAll))
             {
                 stopRecording();
             }
-            else if(e.KeyCode.ToString() == stopHotKey && mode == Mode.playingUntil)
+            else if(e.KeyCode.ToString() == toogleHotKey && mode == Mode.playingUntil)
             {
                 Console.WriteLine("Stoppppp!!!");
                 mode = Mode.none;
